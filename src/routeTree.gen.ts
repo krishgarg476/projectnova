@@ -9,38 +9,228 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as ResultsRouteImport } from './routes/results'
+import { Route as PulseRouteImport } from './routes/pulse'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as FridgeWhispererRouteImport } from './routes/fridge-whisperer'
+import { Route as CrisisRouteImport } from './routes/crisis'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
+import { Route as GroupCartIdRouteImport } from './routes/group.$cartId'
 
+const VoiceRoute = VoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PulseRoute = PulseRouteImport.update({
+  id: '/pulse',
+  path: '/pulse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FridgeWhispererRoute = FridgeWhispererRouteImport.update({
+  id: '/fridge-whisperer',
+  path: '/fridge-whisperer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrisisRoute = CrisisRouteImport.update({
+  id: '/crisis',
+  path: '/crisis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrackingOrderIdRoute = TrackingOrderIdRouteImport.update({
+  id: '/tracking/$orderId',
+  path: '/tracking/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GroupCartIdRoute = GroupCartIdRouteImport.update({
+  id: '/group/$cartId',
+  path: '/group/$cartId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/crisis': typeof CrisisRoute
+  '/fridge-whisperer': typeof FridgeWhispererRoute
+  '/profile': typeof ProfileRoute
+  '/pulse': typeof PulseRoute
+  '/results': typeof ResultsRoute
+  '/voice': typeof VoiceRoute
+  '/group/$cartId': typeof GroupCartIdRoute
+  '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/crisis': typeof CrisisRoute
+  '/fridge-whisperer': typeof FridgeWhispererRoute
+  '/profile': typeof ProfileRoute
+  '/pulse': typeof PulseRoute
+  '/results': typeof ResultsRoute
+  '/voice': typeof VoiceRoute
+  '/group/$cartId': typeof GroupCartIdRoute
+  '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/crisis': typeof CrisisRoute
+  '/fridge-whisperer': typeof FridgeWhispererRoute
+  '/profile': typeof ProfileRoute
+  '/pulse': typeof PulseRoute
+  '/results': typeof ResultsRoute
+  '/voice': typeof VoiceRoute
+  '/group/$cartId': typeof GroupCartIdRoute
+  '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/crisis'
+    | '/fridge-whisperer'
+    | '/profile'
+    | '/pulse'
+    | '/results'
+    | '/voice'
+    | '/group/$cartId'
+    | '/tracking/$orderId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/crisis'
+    | '/fridge-whisperer'
+    | '/profile'
+    | '/pulse'
+    | '/results'
+    | '/voice'
+    | '/group/$cartId'
+    | '/tracking/$orderId'
+  id:
+    | '__root__'
+    | '/'
+    | '/cart'
+    | '/checkout'
+    | '/crisis'
+    | '/fridge-whisperer'
+    | '/profile'
+    | '/pulse'
+    | '/results'
+    | '/voice'
+    | '/group/$cartId'
+    | '/tracking/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
+  CrisisRoute: typeof CrisisRoute
+  FridgeWhispererRoute: typeof FridgeWhispererRoute
+  ProfileRoute: typeof ProfileRoute
+  PulseRoute: typeof PulseRoute
+  ResultsRoute: typeof ResultsRoute
+  VoiceRoute: typeof VoiceRoute
+  GroupCartIdRoute: typeof GroupCartIdRoute
+  TrackingOrderIdRoute: typeof TrackingOrderIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/voice': {
+      id: '/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pulse': {
+      id: '/pulse'
+      path: '/pulse'
+      fullPath: '/pulse'
+      preLoaderRoute: typeof PulseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fridge-whisperer': {
+      id: '/fridge-whisperer'
+      path: '/fridge-whisperer'
+      fullPath: '/fridge-whisperer'
+      preLoaderRoute: typeof FridgeWhispererRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crisis': {
+      id: '/crisis'
+      path: '/crisis'
+      fullPath: '/crisis'
+      preLoaderRoute: typeof CrisisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +238,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tracking/$orderId': {
+      id: '/tracking/$orderId'
+      path: '/tracking/$orderId'
+      fullPath: '/tracking/$orderId'
+      preLoaderRoute: typeof TrackingOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/group/$cartId': {
+      id: '/group/$cartId'
+      path: '/group/$cartId'
+      fullPath: '/group/$cartId'
+      preLoaderRoute: typeof GroupCartIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
+  CrisisRoute: CrisisRoute,
+  FridgeWhispererRoute: FridgeWhispererRoute,
+  ProfileRoute: ProfileRoute,
+  PulseRoute: PulseRoute,
+  ResultsRoute: ResultsRoute,
+  VoiceRoute: VoiceRoute,
+  GroupCartIdRoute: GroupCartIdRoute,
+  TrackingOrderIdRoute: TrackingOrderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
