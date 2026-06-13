@@ -31,7 +31,7 @@ const SORTS: { key: SortKey; label: string }[] = [
 ];
 
 function ResultsPage() {
-  const { searchQuery, agentVerdicts, cartItems, skippedItems, urgencyLevel, addSkippedItem, generateResults, addCartItem } = useStore();
+  const { searchQuery, agentVerdicts, cartItems, skippedItems, urgencyLevel, addSkippedItem, generateResults, addCartItem, isGenerating } = useStore();
   const [step, setStep] = useState(0);
   const [filters, setFilters] = useState<Record<FilterKey, boolean>>({ veg: false, budget: false, fast: false, eco: false });
   const [sort, setSort] = useState<SortKey>("ai");
@@ -40,12 +40,16 @@ function ResultsPage() {
   useEffect(() => { if (!searchQuery) generateResults("daily restock"); }, []);
 
   useEffect(() => {
-    setStep(0);
-    const t1 = setTimeout(() => setStep(1), 500);
-    const t2 = setTimeout(() => setStep(2), 1300);
-    const t3 = setTimeout(() => setStep(3), 2100);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [searchQuery]);
+    if (isGenerating) {
+      setStep(-1);
+    } else {
+      setStep(0);
+      const t1 = setTimeout(() => setStep(1), 300);
+      const t2 = setTimeout(() => setStep(2), 600);
+      const t3 = setTimeout(() => setStep(3), 900);
+      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    }
+  }, [isGenerating]);
 
   const filtered = useMemo(() => {
     return cartItems.filter((i) => {
@@ -135,7 +139,7 @@ function ResultsPage() {
               {AGENTS.map((a, i) => (
                 <motion.div key={a.key} initial={{ opacity: 0, x: -10 }} animate={step > i ? { opacity: 1, x: 0 } : { opacity: 0.3, x: -10 }} transition={{ duration: 0.4 }} className="flex items-start gap-3 p-3 rounded-md border border-[#d5d9d9]" style={{ background: step > i ? "#fafafa" : "white" }}>
                   <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: `${a.color}22` }}>
-                    <a.icon className="w-5 h-5" style={{ color: a.color }} />
+                    <a.icon className={`w-5 h-5 ${step <= i ? "animate-spin" : ""}`} style={{ color: a.color }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-[13px]">{a.name}</div>
@@ -147,15 +151,23 @@ function ResultsPage() {
             </div>
           </div>
 
-          <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <AnimatePresence>
-              {sorted.map((it) => (
-                <motion.div key={it.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9, height: 0 }} transition={{ duration: 0.25 }}>
-                  <ProductCard p={{ id: it.id, name: it.name, imageKeyword: it.imageKeyword, price: it.price, originalPrice: it.originalPrice, reasoning: it.reasoning, agent: it.agentSource, brand: it.brand, isEco: it.isEco }} onAdd={() => addCartItem({ ...it })} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          {isGenerating ? (
+            <div className="flex flex-col items-center justify-center py-20 text-[#565959] az-card min-h-[300px]">
+              <Loader2 className="w-10 h-10 animate-spin mb-4 text-[#ff9900]" />
+              <div className="font-bold text-[18px] text-[#0f1111]">Curating products...</div>
+              <div className="text-[13px] mt-1">The AI Council is debating the best items for you.</div>
+            </div>
+          ) : (
+            <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              <AnimatePresence>
+                {sorted.map((it) => (
+                  <motion.div key={it.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9, height: 0 }} transition={{ duration: 0.25 }}>
+                    <ProductCard p={{ id: it.id, name: it.name, imageKeyword: it.imageKeyword, price: it.price, originalPrice: it.originalPrice, reasoning: it.reasoning, agent: it.agentSource, brand: it.brand, isEco: it.isEco }} onAdd={() => addCartItem({ ...it })} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          )}
 
           {skippedItems.length > 0 && (
             <div className="az-card p-5">

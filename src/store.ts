@@ -416,18 +416,44 @@ export const useStore = create<AppState>((set, get) => ({
   setSearchQuery: (text) => set({ searchQuery: text }),
   generateResults: async (input) => {
     set({ isGenerating: true, searchQuery: input });
-    await new Promise((r) => setTimeout(r, 600));
-    const { dietaryPreferences, favoriteBrands } = get();
-    const res = mockGenerateCart(input, dietaryPreferences, favoriteBrands);
-    let items = res.items;
-    if (dietaryPreferences.includes("Vegetarian")) items = items.filter((i) => i.isVegetarian);
-    set({
-      cartItems: items,
-      skippedItems: res.skipped,
-      agentVerdicts: res.verdicts,
-      urgencyLevel: res.urgency,
-      isGenerating: false,
-    });
+    try {
+      const { dietaryPreferences, familyMembers, favoriteBrands } = get();
+      
+      const { generateCartFn } = await import("@/lib/api/agent.functions");
+      
+      const res = await generateCartFn({
+        data: {
+          query: input,
+          userContext: {
+            dietary: dietaryPreferences,
+            family: familyMembers,
+            patterns: favoriteBrands.map(b => b.name).join(", ")
+          }
+        }
+      });
+      
+      let items = res.items || [];
+      // Apply UI level override just in case, though the AI is instructed to handle it
+      if (dietaryPreferences.includes("Vegetarian")) items = items.filter((i: any) => i.is_vegetarian);
+      
+      set({
+        cartItems: items.map((i: any) => ({ ...i, price: Number(i.price), originalPrice: i.original_price ? Number(i.original_price) : undefined, imageKeyword: i.image_keyword, isVegetarian: i.is_vegetarian, isEco: i.is_eco, etaMinutes: i.eta_minutes })),
+        skippedItems: (res.skipped || []).map((i: any) => ({ ...i, price: Number(i.price), imageKeyword: i.image_keyword })),
+        agentVerdicts: res.verdicts,
+        urgencyLevel: res.urgency as Urgency,
+        isGenerating: false,
+      });
+    } catch (error: any) {
+      console.error("AI Generation failed:", error);
+      set({ 
+        isGenerating: false,
+        agentVerdicts: { 
+          speed: "ERROR", 
+          context: String(error.message || error), 
+          health: "Check browser console or terminal" 
+        }
+      });
+    }
   },
   updateQuantity: (id, qty) =>
     set((s) => ({
