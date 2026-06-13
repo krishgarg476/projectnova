@@ -14,8 +14,10 @@ import { Route as ResultsRouteImport } from './routes/results'
 import { Route as PulseRouteImport } from './routes/pulse'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as FridgeWhispererRouteImport } from './routes/fridge-whisperer'
+import { Route as EcoImpactRouteImport } from './routes/eco-impact'
 import { Route as CrisisRouteImport } from './routes/crisis'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
@@ -46,6 +48,11 @@ const FridgeWhispererRoute = FridgeWhispererRouteImport.update({
   path: '/fridge-whisperer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EcoImpactRoute = EcoImpactRouteImport.update({
+  id: '/eco-impact',
+  path: '/eco-impact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CrisisRoute = CrisisRouteImport.update({
   id: '/crisis',
   path: '/crisis',
@@ -54,6 +61,11 @@ const CrisisRoute = CrisisRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -80,8 +92,10 @@ const GroupCartIdRoute = GroupCartIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/crisis': typeof CrisisRoute
+  '/eco-impact': typeof EcoImpactRoute
   '/fridge-whisperer': typeof FridgeWhispererRoute
   '/profile': typeof ProfileRoute
   '/pulse': typeof PulseRoute
@@ -93,8 +107,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/crisis': typeof CrisisRoute
+  '/eco-impact': typeof EcoImpactRoute
   '/fridge-whisperer': typeof FridgeWhispererRoute
   '/profile': typeof ProfileRoute
   '/pulse': typeof PulseRoute
@@ -107,8 +123,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/crisis': typeof CrisisRoute
+  '/eco-impact': typeof EcoImpactRoute
   '/fridge-whisperer': typeof FridgeWhispererRoute
   '/profile': typeof ProfileRoute
   '/pulse': typeof PulseRoute
@@ -122,8 +140,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cart'
+    | '/chat'
     | '/checkout'
     | '/crisis'
+    | '/eco-impact'
     | '/fridge-whisperer'
     | '/profile'
     | '/pulse'
@@ -135,8 +155,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cart'
+    | '/chat'
     | '/checkout'
     | '/crisis'
+    | '/eco-impact'
     | '/fridge-whisperer'
     | '/profile'
     | '/pulse'
@@ -148,8 +170,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/cart'
+    | '/chat'
     | '/checkout'
     | '/crisis'
+    | '/eco-impact'
     | '/fridge-whisperer'
     | '/profile'
     | '/pulse'
@@ -162,8 +186,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CartRoute: typeof CartRoute
+  ChatRoute: typeof ChatRoute
   CheckoutRoute: typeof CheckoutRoute
   CrisisRoute: typeof CrisisRoute
+  EcoImpactRoute: typeof EcoImpactRoute
   FridgeWhispererRoute: typeof FridgeWhispererRoute
   ProfileRoute: typeof ProfileRoute
   PulseRoute: typeof PulseRoute
@@ -210,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FridgeWhispererRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/eco-impact': {
+      id: '/eco-impact'
+      path: '/eco-impact'
+      fullPath: '/eco-impact'
+      preLoaderRoute: typeof EcoImpactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/crisis': {
       id: '/crisis'
       path: '/crisis'
@@ -222,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -258,8 +298,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CartRoute: CartRoute,
+  ChatRoute: ChatRoute,
   CheckoutRoute: CheckoutRoute,
   CrisisRoute: CrisisRoute,
+  EcoImpactRoute: EcoImpactRoute,
   FridgeWhispererRoute: FridgeWhispererRoute,
   ProfileRoute: ProfileRoute,
   PulseRoute: PulseRoute,
@@ -271,3 +313,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

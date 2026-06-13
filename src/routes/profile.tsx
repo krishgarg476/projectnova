@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
+import { ProductImage } from "@/components/ProductImage";
 import { useStore } from "@/store";
-import { Leaf, Shield, MapPin, History, Heart, Activity } from "lucide-react";
+import { Leaf, Shield, MapPin, History, Heart, Activity, Pencil, Plus, X, Trash2, Camera, Star, Users } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Your Account — Now" }] }),
@@ -19,80 +21,79 @@ const PREFS = ["Vegetarian", "No nuts", "Budget-conscious", "Eco-friendly", "Qui
 
 const ORDERS = [
   { id: "NOW-2026-9712", date: "Yesterday", items: "Snack & beverage pack", total: 879, query: "snack and beverage pack" },
-  { id: "NOW-2026-9684", date: "3 days ago", items: "Wellness essentials", total: 451, query: "wellness essentials" },
+  { id: "NOW-2026-9684", date: "3 days ago", items: "Wellness essentials", total: 451, query: "feeling unwell, body aches" },
   { id: "NOW-2026-9522", date: "Last week", items: "Weekly grocery restock", total: 1240, query: "weekly grocery restock" },
 ];
 
 function ProfilePage() {
-  const [pats, setPats] = useState(PATTERNS);
-  const [prefs, setPrefs] = useState<Record<string, boolean>>({ Vegetarian: true, "Budget-conscious": true });
   const navigate = useNavigate();
-  const generate = useStore((s) => s.generateResults);
+  const { userProfile, updateProfile, addresses, openAddAddress, deleteAddress, setSelectedAddress, selectedAddressId, dietaryPreferences, toggleDietary, familyMembers, updateFamilyMember, favoriteBrands, toggleBrand, crisisContacts, updateCrisisContact, addCrisisContact, deleteCrisisContact, generateResults } = useStore();
+  const [pats, setPats] = useState(PATTERNS);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [pendingDel, setPendingDel] = useState<string | null>(null);
+  const [editContact, setEditContact] = useState<string | null>(null);
+  const [editMember, setEditMember] = useState<string | null>(null);
 
   async function reorder(q: string) {
-    await generate(q);
+    await generateResults(q);
     navigate({ to: "/results" });
+  }
+
+  function onAvatar(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (f) updateProfile({ avatarUrl: URL.createObjectURL(f) });
   }
 
   return (
     <Layout>
       <div className="max-w-[1500px] mx-auto px-4 py-5">
         <h1 className="text-[28px] font-normal mb-4">Your Account</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          <Tile icon={<Activity className="w-6 h-6 text-[#5848bc]" />} title="Household Patterns" desc="Learned routines Now can act on.">
-            {pats.map((p, i) => (
-              <label key={p.l} className="flex items-center justify-between py-2 text-[13px]">
-                <span>{p.l}</span>
-                <input type="checkbox" checked={p.on} onChange={() => setPats(pats.map((x, j) => j === i ? { ...x, on: !x.on } : x))} className="w-9 h-5 accent-[#ff9900]" />
-              </label>
+        {/* Profile header */}
+        <div className="az-card p-5 mb-4 flex gap-5 items-start flex-wrap">
+          <div className="w-24 h-24 rounded-full overflow-hidden bg-[#f3f3f3] border border-[#d5d9d9] shrink-0">
+            {userProfile.avatarUrl ? <img src={userProfile.avatarUrl} className="w-full h-full object-cover" /> : <ProductImage keyword="portrait-person" seed="user" size={200} className="w-full h-full object-cover" />}
+          </div>
+          <div className="flex-1 min-w-0 space-y-1">
+            {(["name", "phone", "email"] as const).map((field) => (
+              <EditableField key={field} label={field[0].toUpperCase() + field.slice(1)} value={userProfile[field] || ""} editing={editing === field} onEdit={() => setEditing(field)} onCancel={() => setEditing(null)} onSave={(v) => { updateProfile({ [field]: v }); setEditing(null); }} />
             ))}
-          </Tile>
+            <label className="inline-flex items-center gap-2 text-[12px] az-link cursor-pointer mt-2">
+              <Camera className="w-4 h-4" /> Change profile photo
+              <input type="file" accept="image/*" onChange={onAvatar} className="hidden" />
+            </label>
+          </div>
+        </div>
 
-          <Tile icon={<Leaf className="w-6 h-6 text-[#007600]" />} title="Eco Impact" desc="Your green path so far.">
-            <div className="flex items-center justify-center my-3">
-              <div className="relative w-32 h-32">
-                <svg viewBox="0 0 36 36" className="w-32 h-32 -rotate-90">
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#eee" strokeWidth="3.5" />
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#007600" strokeWidth="3.5" strokeDasharray="88" strokeDashoffset="22" strokeLinecap="round" />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-[24px] font-bold text-[#007600]">1.2 kg</div>
-                  <div className="text-[10px] text-[#565959]">CO₂ saved</div>
-                </div>
-              </div>
-            </div>
-            <div className="text-[12px] text-center text-[#565959]">8 bundled deliveries this month</div>
-          </Tile>
-
-          <Tile icon={<Heart className="w-6 h-6 text-[#b12704]" />} title="Dietary & Budget Preferences" desc="Tags Now uses to refine carts.">
-            <div className="flex flex-wrap gap-2 mt-2">
-              {PREFS.map((p) => (
-                <button key={p} onClick={() => setPrefs({ ...prefs, [p]: !prefs[p] })} className={`px-3 py-1 rounded-full text-[12px] border transition ${prefs[p] ? "bg-[#5848bc] text-white border-[#5848bc]" : "bg-white border-[#d5d9d9] hover:border-[#0f1111]"}`}>
-                  {p}
-                </button>
-              ))}
-            </div>
-          </Tile>
-
-          <Tile icon={<Shield className="w-6 h-6 text-[#b12704]" />} title="Crisis Contacts" desc="People notified during a Crisis Mode order.">
-            <div className="border border-[#d5d9d9] rounded p-3 text-[13px]">
-              <div className="font-semibold">Priya Sharma</div>
-              <div className="text-[#565959]">Sister · +91 98XXX XX234</div>
-              <button className="az-link text-[12px] mt-1">Edit</button>
-            </div>
-          </Tile>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Tile icon={<MapPin className="w-6 h-6 text-[#007185]" />} title="Saved Addresses" desc="Where Now delivers.">
             <div className="space-y-2 text-[13px]">
-              <div className="border border-[#d5d9d9] rounded p-3">
-                <div className="font-semibold">Home</div>
-                <div className="text-[#565959]">203, Vigyan Nagar, Kota 324001</div>
-              </div>
-              <div className="border border-[#d5d9d9] rounded p-3">
-                <div className="font-semibold">Office</div>
-                <div className="text-[#565959]">5th Floor, Tech Park, Jaipur 302017</div>
-              </div>
+              {addresses.map((a) => (
+                <div key={a.id} className={`border rounded p-3 ${selectedAddressId === a.id ? "border-[#ff9900] bg-[#fff8ed]" : "border-[#d5d9d9]"}`}>
+                  {pendingDel === a.id ? (
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[12px]">Delete this address?</span>
+                      <div className="flex gap-1">
+                        <button onClick={() => { deleteAddress(a.id); setPendingDel(null); }} className="btn-az-yellow text-[11px] px-2">Yes</button>
+                        <button onClick={() => setPendingDel(null)} className="text-[11px] az-link px-2">Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <div className="font-semibold">{a.label}</div>
+                        <div className="flex gap-2">
+                          <button onClick={() => setSelectedAddress(a.id)} className="text-[11px] az-link">Use</button>
+                          <button onClick={() => openAddAddress(a.id)}><Pencil className="w-3 h-3 text-[#565959]" /></button>
+                          <button onClick={() => setPendingDel(a.id)}><Trash2 className="w-3 h-3 text-[#b12704]" /></button>
+                        </div>
+                      </div>
+                      <div className="text-[#565959]">{a.line1}, {a.cityStateZip}</div>
+                    </>
+                  )}
+                </div>
+              ))}
+              <button onClick={() => openAddAddress()} className="w-full border border-dashed border-[#d5d9d9] rounded p-2 text-[12px] az-link flex items-center justify-center gap-1"><Plus className="w-3 h-3" /> Add new address</button>
             </div>
           </Tile>
 
@@ -109,6 +110,110 @@ function ProfilePage() {
               ))}
             </ul>
           </Tile>
+
+          <Tile icon={<Heart className="w-6 h-6 text-[#b12704]" />} title="Dietary & Budget Preferences" desc="Tags Now uses to refine carts.">
+            <div className="flex flex-wrap gap-2 mt-2">
+              {PREFS.map((p) => {
+                const active = dietaryPreferences.includes(p);
+                return (
+                  <motion.button key={p} whileTap={{ scale: 1.08 }} onClick={() => toggleDietary(p)} className={`px-3 py-1 rounded-full text-[12px] border transition ${active ? "bg-[#5848bc] text-white border-[#5848bc]" : "bg-white border-[#d5d9d9] hover:border-[#0f1111]"}`}>
+                    {p}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </Tile>
+
+          <Tile icon={<Activity className="w-6 h-6 text-[#5848bc]" />} title="Household Patterns" desc="Learned routines Now can act on.">
+            {pats.map((p, i) => (
+              <label key={p.l} className="flex items-center justify-between py-2 text-[13px]">
+                <span>{p.l}</span>
+                <button onClick={() => setPats(pats.map((x, j) => j === i ? { ...x, on: !x.on } : x))} className={`w-10 h-5 rounded-full p-0.5 transition ${p.on ? "bg-[#ff9900]" : "bg-[#d5d9d9]"}`}>
+                  <motion.div animate={{ x: p.on ? 20 : 0, scale: [1, 1.1, 1] }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="w-4 h-4 rounded-full bg-white shadow" />
+                </button>
+              </label>
+            ))}
+          </Tile>
+
+          <Tile icon={<Users className="w-6 h-6 text-[#5848bc]" />} title="Household Profile" desc="Family of 4 · AI learns context.">
+            <div className="space-y-2 text-[13px]">
+              {familyMembers.map((m) => (
+                <div key={m.id} className="border border-[#d5d9d9] rounded p-2">
+                  {editMember === m.id ? (
+                    <div className="space-y-1">
+                      <input defaultValue={m.name} onChange={(e) => updateFamilyMember(m.id, { name: e.target.value })} className="w-full border border-[#d5d9d9] rounded px-2 py-1 text-[12px]" />
+                      <input defaultValue={m.note} onChange={(e) => updateFamilyMember(m.id, { note: e.target.value })} className="w-full border border-[#d5d9d9] rounded px-2 py-1 text-[12px]" placeholder="Note (e.g. vegetarian)" />
+                      <button onClick={() => setEditMember(null)} className="btn-az-yellow text-[11px]">Save</button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold">{m.name} — {m.age}</div>
+                        <div className="text-[11px] text-[#565959]">{m.note}</div>
+                      </div>
+                      <button onClick={() => setEditMember(m.id)}><Pencil className="w-3 h-3 text-[#565959]" /></button>
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="text-[12px] text-[#565959] mt-2">Recurring household needs:</div>
+              <ul className="text-[12px] space-y-1">
+                <li>🥛 Milk — every 3 days <span className="ai-badge">AI tracks this ✓</span></li>
+                <li>🔥 Cooking gas refill — every 3 weeks <span className="ai-badge">AI tracks this ✓</span></li>
+                <li>🥕 Vegetable restock — twice a week <span className="ai-badge">AI tracks this ✓</span></li>
+              </ul>
+            </div>
+          </Tile>
+
+          <Tile icon={<Star className="w-6 h-6 text-[#ff9900]" />} title="Your Favorite Brands" desc="Learned brand preferences.">
+            <ul className="space-y-2 text-[13px]">
+              {favoriteBrands.map((b) => (
+                <li key={b.name} className="flex items-center justify-between gap-2">
+                  <div className="w-8 h-8 rounded overflow-hidden bg-[#f3f3f3]"><ProductImage keyword={`${b.name}-logo`} seed={b.name} size={80} className="w-full h-full object-cover" /></div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-[12px] truncate">{b.name}</div>
+                    <div className="text-[11px] text-[#565959]">{b.category} · ordered {b.orderCount}×</div>
+                  </div>
+                  <button onClick={() => toggleBrand(b.name)} className={`w-9 h-5 rounded-full p-0.5 transition ${b.prioritize ? "bg-[#ff9900]" : "bg-[#d5d9d9]"}`}>
+                    <motion.div animate={{ x: b.prioritize ? 16 : 0 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="w-4 h-4 rounded-full bg-white shadow" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </Tile>
+
+          <Tile icon={<Shield className="w-6 h-6 text-[#b12704]" />} title="Crisis Contacts" desc="People notified in Crisis Mode.">
+            <ul className="space-y-2 text-[13px]">
+              {crisisContacts.map((c) => (
+                <li key={c.id} className="border border-[#d5d9d9] rounded p-2">
+                  {editContact === c.id ? (
+                    <div className="space-y-1">
+                      <input defaultValue={c.name} onChange={(e) => updateCrisisContact(c.id, { name: e.target.value })} placeholder="Name" className="w-full border rounded px-2 py-1 text-[12px]" />
+                      <input defaultValue={c.relation} onChange={(e) => updateCrisisContact(c.id, { relation: e.target.value })} placeholder="Relation" className="w-full border rounded px-2 py-1 text-[12px]" />
+                      <input defaultValue={c.phone} onChange={(e) => updateCrisisContact(c.id, { phone: e.target.value })} placeholder="Phone" className="w-full border rounded px-2 py-1 text-[12px]" />
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditContact(null)} className="btn-az-yellow text-[11px]">Save</button>
+                        <button onClick={() => { deleteCrisisContact(c.id); setEditContact(null); }} className="text-[11px] az-link text-[#b12704]">Delete</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold">{c.name}</div>
+                        <div className="text-[11px] text-[#565959]">{c.relation} · {c.phone}</div>
+                      </div>
+                      <button onClick={() => setEditContact(c.id)}><Pencil className="w-3 h-3 text-[#565959]" /></button>
+                    </div>
+                  )}
+                </li>
+              ))}
+              <button onClick={addCrisisContact} className="w-full border border-dashed border-[#d5d9d9] rounded p-2 text-[12px] az-link flex items-center justify-center gap-1"><Plus className="w-3 h-3" /> Add another contact</button>
+            </ul>
+          </Tile>
+
+          <Tile icon={<Leaf className="w-6 h-6 text-[#007600]" />} title="Eco Impact" desc="See your sustainability dashboard.">
+            <button onClick={() => navigate({ to: "/eco-impact" })} className="btn-az-yellow w-full mt-2">Open Eco Impact →</button>
+          </Tile>
         </div>
       </div>
     </Layout>
@@ -124,3 +229,25 @@ function Tile({ icon, title, desc, children }: any) {
     </div>
   );
 }
+
+function EditableField({ label, value, editing, onEdit, onCancel, onSave }: { label: string; value: string; editing: boolean; onEdit: () => void; onCancel: () => void; onSave: (v: string) => void }) {
+  const [v, setV] = useState(value);
+  if (editing) return (
+    <div className="flex items-center gap-2 text-[13px]">
+      <span className="text-[#565959] w-16">{label}:</span>
+      <input value={v} onChange={(e) => setV(e.target.value)} className="border border-[#d5d9d9] rounded px-2 py-1 flex-1" />
+      <button onClick={() => onSave(v)} className="btn-az-yellow text-[11px]">Save</button>
+      <button onClick={onCancel} className="az-link text-[11px]">Cancel</button>
+    </div>
+  );
+  return (
+    <div className="flex items-center gap-2 text-[14px]">
+      <span className="text-[#565959] w-16">{label}:</span>
+      <span className="font-semibold flex-1">{value}</span>
+      <button onClick={() => { setV(value); onEdit(); }}><Pencil className="w-3 h-3 text-[#565959]" /></button>
+    </div>
+  );
+}
+
+// Unused but kept to retain icon import compatibility
+export const _X = X;
