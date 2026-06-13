@@ -1,19 +1,21 @@
-import { Star, Sparkles } from "lucide-react";
+import { useStore, type CartItem } from "@/store";
+import { ProductImage } from "./ProductImage";
+import { Sparkles, Star, Plus } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export interface Product {
   id: string;
   name: string;
-  emoji: string;
+  imageKeyword?: string;
+  emoji?: string; // legacy/ignored
   price: number;
   originalPrice?: number;
-  rating?: number;
   reasoning?: string;
   agent?: "speed" | "context" | "health";
-  bg?: string;
+  brand?: string;
+  isEco?: boolean;
 }
-
-const BGS = ["#fde6c8", "#d6eaff", "#e3f5d8", "#fde0e0", "#e8e0f7", "#fff4c2", "#d9f1ec", "#fbe2cf"];
 
 export function ProductCard({
   p,
@@ -25,51 +27,68 @@ export function ProductCard({
   compact?: boolean;
 }) {
   const [showTip, setShowTip] = useState(false);
+  const openProductDetail = useStore((s) => s.openProductDetail);
+  const favBrands = useStore((s) => s.favoriteBrands);
+  const isFavBrand = !!(p.brand && favBrands.find((b) => b.name === p.brand && b.prioritize));
   const discount = p.originalPrice ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
-  const bg = p.bg || BGS[parseInt(p.id.replace(/\D/g, "") || "0") % BGS.length];
+  const keyword = p.imageKeyword || p.name.toLowerCase().split(" ").slice(0, 3).join("-");
+
+  function openDetail() {
+    openProductDetail({
+      id: p.id, name: p.name, category: "Detail", quantity: 1, price: p.price, originalPrice: p.originalPrice,
+      reasoning: p.reasoning || "", agentSource: p.agent || "context", imageKeyword: keyword,
+      isVegetarian: true, isEco: p.isEco ?? false, etaMinutes: 11, discountPercent: discount, relevanceScore: 80, brand: p.brand,
+    } as CartItem);
+  }
 
   return (
-    <div className="az-card p-3 flex flex-col gap-2 hover:shadow-md transition-shadow group relative">
-      <div className="relative">
-        <div
-          className="aspect-square rounded-md flex items-center justify-center text-6xl"
-          style={{ background: bg }}
-        >
-          {p.emoji}
+    <motion.div layout className="az-card p-3 flex flex-col gap-2 hover:shadow-md transition-shadow group relative">
+      <div className="relative cursor-pointer" onClick={openDetail}>
+        <div className="aspect-square rounded-md overflow-hidden bg-[#f3f3f3]">
+          <ProductImage keyword={keyword} seed={p.id} size={400} className="w-full h-full object-cover" alt={p.name} />
         </div>
         {discount > 0 && (
           <div className="absolute top-1 left-1 bg-[#cc0c39] text-white text-[11px] font-bold px-1.5 py-0.5 rounded-sm">
             -{discount}%
           </div>
         )}
+        {p.isEco && (
+          <div className="absolute top-1 right-1 bg-[#007600] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm">🌱 ECO</div>
+        )}
         {onAdd && (
           <button
-            onClick={onAdd}
+            onClick={(e) => { e.stopPropagation(); onAdd(); }}
             className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-[#ffd814] hover:bg-[#f7ca00] border border-[#c89411] flex items-center justify-center text-lg font-bold opacity-0 group-hover:opacity-100 transition-opacity"
+            aria-label="Add to cart"
           >
-            +
+            <Plus className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      <div className="text-[13px] line-clamp-2 leading-tight">{p.name}</div>
+      <button onClick={openDetail} className="text-[13px] line-clamp-2 leading-tight text-left hover:text-[#c7511f]">{p.name}</button>
 
-      {p.reasoning && (
-        <div
-          className="relative inline-block self-start"
-          onMouseEnter={() => setShowTip(true)}
-          onMouseLeave={() => setShowTip(false)}
-        >
-          <span className="ai-badge cursor-help">
-            <Sparkles className="w-3 h-3" /> Now AI
-          </span>
-          {showTip && (
-            <div className="absolute z-20 left-0 top-full mt-1 w-56 bg-[#0f1111] text-white text-[12px] p-2 rounded-md shadow-lg leading-snug">
-              {p.reasoning}
-            </div>
-          )}
-        </div>
-      )}
+      <div className="flex items-center gap-1 flex-wrap">
+        {p.reasoning && (
+          <div
+            className="relative inline-block"
+            onMouseEnter={() => setShowTip(true)}
+            onMouseLeave={() => setShowTip(false)}
+          >
+            <span className="ai-badge cursor-help">
+              <Sparkles className="w-3 h-3" /> Now AI
+            </span>
+            {showTip && (
+              <div className="absolute z-20 left-0 top-full mt-1 w-56 bg-[#0f1111] text-white text-[12px] p-2 rounded-md shadow-lg leading-snug">
+                {p.reasoning}
+              </div>
+            )}
+          </div>
+        )}
+        {isFavBrand && (
+          <span className="inline-flex items-center gap-1 border border-[#ff9900] text-[#c7511f] text-[10px] font-semibold px-1.5 py-0.5 rounded-full">⭐ Your usual brand</span>
+        )}
+      </div>
 
       {!compact && (
         <div className="flex items-center gap-1 text-[12px]">
@@ -83,17 +102,12 @@ export function ProductCard({
 
       <div className="flex items-baseline gap-1">
         <span className="text-[18px] font-medium">
-          <sup className="text-[12px]">₹</sup>
-          {p.price}
+          <sup className="text-[12px]">₹</sup>{p.price}
         </span>
         {p.originalPrice && (
           <span className="text-[12px] text-[#565959] line-through">M.R.P: ₹{p.originalPrice}</span>
         )}
       </div>
-
-      {!compact && (
-        <a className="text-[12px] az-link">Shop deals</a>
-      )}
-    </div>
+    </motion.div>
   );
 }

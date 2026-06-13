@@ -1,6 +1,7 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
+import { ProductImage } from "@/components/ProductImage";
 import { useStore } from "@/store";
 import { Check, Phone, MessageCircle, Star } from "lucide-react";
 
@@ -13,23 +14,19 @@ const STEPS = ["Order Confirmed", "Preparing", "Out for Delivery", "Delivered"];
 
 function TrackingPage() {
   const { orderId } = useParams({ from: "/tracking/$orderId" });
-  const { cartItems } = useStore();
+  const { lastOrderItems, lastOrderTotal } = useStore();
   const [countdown, setCountdown] = useState(28);
   const [step, setStep] = useState(0);
   const [rating, setRating] = useState(0);
 
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const t = setInterval(() => setCountdown((c) => c - 1), 1000);
-    return () => clearInterval(t);
-  }, [countdown]);
-
+  useEffect(() => { if (countdown <= 0) return; const t = setInterval(() => setCountdown((c) => c - 1), 1000); return () => clearInterval(t); }, [countdown]);
   useEffect(() => {
     if (countdown <= 21 && step < 1) setStep(1);
     if (countdown <= 14 && step < 2) setStep(2);
     if (countdown <= 0 && step < 3) setStep(3);
   }, [countdown, step]);
 
+  const items = lastOrderItems.length ? lastOrderItems : [];
   const progress = Math.min(100, ((28 - countdown) / 28) * 100);
 
   return (
@@ -92,20 +89,25 @@ function TrackingPage() {
 
         <div className="az-card p-5">
           <h2 className="font-bold text-[16px] mb-3">Order details</h2>
-          <ul className="divide-y divide-[#d5d9d9]">
-            {cartItems.map((i) => (
-              <li key={i.id} className="py-3 flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#f3f3f3] rounded flex items-center justify-center text-2xl">{i.emoji}</div>
-                <div className="flex-1 text-[14px]">{i.name}</div>
-                <div className="text-[13px] text-[#565959]">×{i.quantity}</div>
-                <div className="text-[14px] font-semibold w-20 text-right">₹{i.price * i.quantity}</div>
-              </li>
-            ))}
-          </ul>
+          {items.length === 0 ? (
+            <div className="text-[13px] text-[#565959]">Demo order — no item details available.</div>
+          ) : (
+            <ul className="divide-y divide-[#d5d9d9]">
+              {items.map((i) => (
+                <li key={i.id} className="py-3 flex items-center gap-3">
+                  <div className="w-12 h-12 rounded overflow-hidden bg-[#f3f3f3]"><ProductImage keyword={i.imageKeyword} seed={i.id} size={100} className="w-full h-full object-cover" /></div>
+                  <div className="flex-1 text-[14px]">{i.name}</div>
+                  <div className="text-[13px] text-[#565959]">×{i.quantity}</div>
+                  <div className="text-[14px] font-semibold w-20 text-right">₹{i.price * i.quantity}</div>
+                </li>
+              ))}
+            </ul>
+          )}
+          {lastOrderTotal > 0 && <div className="text-right font-bold text-[16px] mt-3">Total: ₹{lastOrderTotal}</div>}
         </div>
 
         {step >= 3 && (
-          <div className="az-card p-5 text-center animate-in slide-in-from-bottom duration-500">
+          <div className="az-card p-5 text-center">
             <Check className="w-12 h-12 mx-auto text-[#007600]" />
             <h2 className="text-[18px] font-bold mt-2">Delivered! Rate your delivery</h2>
             <div className="flex justify-center gap-1 mt-3">
