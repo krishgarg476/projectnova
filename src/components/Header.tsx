@@ -61,11 +61,11 @@ export function Header() {
     return () => clearTimeout(t);
   }, [charIdx, phIdx]);
 
-  async function submit(e?: React.FormEvent) {
+  function submit(e?: React.FormEvent) {
     e?.preventDefault();
     const q = (text || ph || "daily restock").trim();
-    await generate(q);
     navigate({ to: "/results" });
+    generate(q);
   }
 
   function isActive(to: string) {

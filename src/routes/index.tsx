@@ -6,6 +6,8 @@ import { ProductImage } from "@/components/ProductImage";
 import { useStore } from "@/store";
 import { ChevronLeft, ChevronRight, Sparkles, Camera, Mic, Users, Leaf, AlertTriangle, Activity } from "lucide-react";
 
+import { getHomeProductsFn } from "@/lib/api/home.functions";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -13,6 +15,9 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Describe what's happening. Now's AI Council builds your cart in seconds." },
     ],
   }),
+  loader: async () => {
+    return await getHomeProductsFn();
+  },
   component: Home,
 });
 
@@ -22,31 +27,8 @@ const SLIDES = [
   { headline: "Snap your fridge. Get your cart.", sub: "Fridge Whisperer uses vision AI to spot what's missing — and restocks it.", cta: "Try Fridge Whisperer", keywords: ["lettuce", "carrot", "eggs", "cheese-block", "meat", "apple", "milk-bottle", "butter"], bg: "linear-gradient(135deg, #ffe5cc 0%, #ffb380 100%)" },
 ];
 
-const DEAL_PRODUCTS: Product[] = [
-  { id: "d1", name: "ORS Hydration Sachets (10-pack)", imageKeyword: "ors-sachet", price: 120, originalPrice: 180 },
-  { id: "d2", name: "Premium Basmati Rice 5kg", imageKeyword: "basmati-rice", price: 549, originalPrice: 750 },
-  { id: "d3", name: "10,000 mAh Quick-Charge Power Bank", imageKeyword: "power-bank", price: 999, originalPrice: 1499 },
-  { id: "d4", name: "Insulated Lunch Box Set", imageKeyword: "lunch-box-tiffin", price: 449, originalPrice: 699, isEco: true },
-  { id: "d5", name: "Emergency Candle Pack (12)", imageKeyword: "candles", price: 199, originalPrice: 280 },
-  { id: "d6", name: "Instant Coffee Sachets (30)", imageKeyword: "coffee-sachet", price: 279, originalPrice: 350 },
-  { id: "d7", name: "Tata Sampann Toor Dal 1kg", imageKeyword: "toor-dal", price: 169, originalPrice: 210, brand: "Tata Sampann" },
-  { id: "d8", name: "Colgate MaxFresh 150g (3-pack)", imageKeyword: "toothpaste", price: 198, originalPrice: 270 },
-  { id: "d9", name: "Whole Wheat Bread (2-pack)", imageKeyword: "whole-wheat-bread", price: 90, originalPrice: 120 },
-  { id: "d10", name: "Amul Butter 500g", imageKeyword: "amul-butter", price: 285, originalPrice: 320, brand: "Amul" },
-  { id: "d11", name: "Maggi Hot & Sweet Sauce 1kg", imageKeyword: "tomato-sauce", price: 145, originalPrice: 195 },
-  { id: "d12", name: "Dettol Handwash 750ml (2-pack)", imageKeyword: "handwash-bottle", price: 199, originalPrice: 280 },
-];
-
-const CRISIS_DEALS: Product[] = [
-  { id: "c1", name: "First Aid Kit (50 items)", imageKeyword: "first-aid-kit", price: 399, originalPrice: 599 },
-  { id: "c2", name: "LED Rechargeable Torch", imageKeyword: "led-torch-flashlight", price: 449, originalPrice: 650 },
-  { id: "c3", name: "Bisleri Water 2L (4-pack)", imageKeyword: "water-bottles", price: 160, originalPrice: 200 },
-  { id: "c4", name: "Battery-Powered Fan", imageKeyword: "battery-fan", price: 799, originalPrice: 1100 },
-  { id: "c5", name: "Ready-to-Eat Meals (5)", imageKeyword: "ready-meals", price: 450, originalPrice: 600 },
-  { id: "c6", name: "Power Bank 20,000 mAh", imageKeyword: "power-bank", price: 1599, originalPrice: 2200 },
-];
-
 function Home() {
+  const { deals, crisis } = Route.useLoaderData();
   const [slide, setSlide] = useState(0);
   const navigate = useNavigate();
   const generate = useStore((s) => s.generateResults);
@@ -187,8 +169,8 @@ function Home() {
               <h2 className="text-[21px] font-bold">Recommended for you</h2>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {DEAL_PRODUCTS.map((p) => (
-                <ProductCard key={p.id} p={p} onAdd={() => addCart({ id: p.id, name: p.name, category: "Deal", price: p.price, originalPrice: p.originalPrice, reasoning: "Added from Recommended for you", imageKeyword: p.imageKeyword!, brand: p.brand, isEco: p.isEco })} />
+              {deals.map((p: any) => (
+                <ProductCard key={p.id} p={{...p, imageKeyword: p.image_keyword || p.imageKeyword}} onAdd={() => addCart({ id: p.id, name: p.name, category: "Deal", price: p.price, originalPrice: p.originalPrice || p.price * 1.2, reasoning: "Added from Recommended for you", imageKeyword: p.image_keyword || p.imageKeyword || "product", brand: p.brand, isEco: p.isEco })} />
               ))}
             </div>
           </section>
@@ -199,8 +181,8 @@ function Home() {
               <button onClick={openCrisis} className="az-link text-[13px]">Open Crisis Mode →</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {CRISIS_DEALS.map((p) => (
-                <ProductCard key={p.id} p={p} onAdd={() => addCart({ id: p.id, name: p.name, category: "Emergency", price: p.price, originalPrice: p.originalPrice, reasoning: "Crisis essentials best-seller", imageKeyword: p.imageKeyword!, agentSource: "speed" })} />
+              {crisis.map((p: any) => (
+                <ProductCard key={p.id} p={{...p, imageKeyword: p.image_keyword || p.imageKeyword}} onAdd={() => addCart({ id: p.id, name: p.name, category: "Emergency", price: p.price, originalPrice: p.originalPrice || p.price * 1.2, reasoning: "Crisis essentials best-seller", imageKeyword: p.image_keyword || p.imageKeyword || "product", agentSource: "speed" })} />
               ))}
             </div>
           </section>
