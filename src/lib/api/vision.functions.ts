@@ -24,7 +24,7 @@ interface ResultItem {
 export const processImageFn = createServerFn({ method: "POST" })
   .inputValidator((data) => inputSchema.parse(data))
   .handler(async ({ data }) => {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
     
     // Strip out the data URL prefix if present (e.g. "data:image/jpeg;base64,")
     const base64Str = data.base64Image.includes("base64,") 

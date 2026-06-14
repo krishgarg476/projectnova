@@ -94,28 +94,6 @@ function ResultsPage() {
               </div>
             ))}
           </div>
-          <div className="az-card p-4">
-            <div className="font-bold text-[14px] mb-2">Refine your cart</div>
-            {FILTERS.map((f) => {
-              const active = filters[f.key];
-              return (
-                <motion.button
-                  key={f.key}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => setFilters((s) => ({ ...s, [f.key]: !s[f.key] }))}
-                  className={`w-full flex items-center gap-2 px-2 py-1.5 mb-1 text-[13px] text-left rounded border transition-colors ${active ? "border-[#ff9900] bg-[#fff3e0]" : "border-transparent hover:border-[#d5d9d9] bg-white"}`}
-                >
-                  <span className={`w-4 h-4 rounded border flex items-center justify-center ${active ? "bg-[#ff9900] border-[#ff9900]" : "border-[#d5d9d9]"}`}>
-                    <AnimatePresence>
-                      {active && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}><Check className="w-3 h-3 text-white" /></motion.span>}
-                    </AnimatePresence>
-                  </span>
-                  {f.label}
-                </motion.button>
-              );
-            })}
-            <div className="text-[11px] text-[#565959] mt-2">Showing {sorted.length} of {cartItems.length} items</div>
-          </div>
         </aside>
 
         <section className="space-y-4 min-w-0">

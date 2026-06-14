@@ -24,9 +24,9 @@ export const Route = createFileRoute("/")({
 });
 
 const SLIDES = [
-  { headline: "Tell Now what's going on.", sub: "AI-powered urgent shopping — describe your situation, get your cart instantly.", cta: "Try it now", keywords: ["lunch-box", "soda-can", "popcorn", "medicine", "tissue", "milk-carton", "bread-loaf", "battery"], bg: "linear-gradient(135deg, #e8e4ff 0%, #c8b8ff 100%)" },
-  { headline: "Your next 24 hours, predicted.", sub: "Predictive Pulse learns your patterns — so the cart is ready before you need it.", cta: "See your Pulse", keywords: ["coffee-cup", "fried-eggs", "salad", "pasta", "cookies", "tea", "tacos", "pizza"], bg: "linear-gradient(135deg, #d4f0e8 0%, #8ed5be 100%)" },
-  { headline: "Snap your fridge. Get your cart.", sub: "Fridge Whisperer uses vision AI to spot what's missing — and restocks it.", cta: "Try Fridge Whisperer", keywords: ["lettuce", "carrot", "eggs", "cheese-block", "meat", "apple", "milk-bottle", "butter"], bg: "linear-gradient(135deg, #ffe5cc 0%, #ffb380 100%)" },
+  { headline: "Tell Now what's going on.", sub: "AI-powered urgent shopping — describe your situation, get your cart instantly.", cta: "Try it now", action: true, keywords: ["lunch-box", "soda-can", "popcorn", "medicine", "tissue", "milk-carton", "bread-loaf", "battery"], bg: "linear-gradient(135deg, #e8e4ff 0%, #c8b8ff 100%)" },
+  { headline: "Your next 24 hours, predicted.", sub: "Predictive Pulse learns your patterns — so the cart is ready before you need it.", cta: "See your Pulse", action: true, keywords: ["coffee-cup", "fried-eggs", "salad", "pasta", "cookies", "tea", "tacos", "pizza"], bg: "linear-gradient(135deg, #d4f0e8 0%, #8ed5be 100%)" },
+  { headline: "Snap your fridge. Get your cart.", sub: "Fridge Whisperer uses vision AI to spot what's missing — and restocks it.", cta: "Try Fridge Whisperer", route: "/fridge-whisperer", keywords: ["lettuce", "carrot", "eggs", "cheese-block", "meat", "apple", "milk-bottle", "butter"], bg: "linear-gradient(135deg, #ffe5cc 0%, #ffb380 100%)" },
 ];
 
 function Home() {
@@ -48,12 +48,12 @@ function Home() {
       <div className="bg-[#eaeded]">
         <div className="relative h-[380px] overflow-hidden">
           {SLIDES.map((s, i) => (
-            <div key={i} className="absolute inset-0 transition-opacity duration-700" style={{ background: s.bg, opacity: i === slide ? 1 : 0 }}>
+            <div key={i} className="absolute inset-0 transition-opacity duration-700" style={{ background: s.bg, opacity: i === slide ? 1 : 0, pointerEvents: i === slide ? "auto" : "none" }}>
               <div className="max-w-[1500px] mx-auto h-full px-12 flex items-center justify-between gap-12">
                 <div className="max-w-xl">
                   <h1 className="text-[44px] leading-tight font-extrabold text-[#0f1111]">{s.headline}</h1>
                   <p className="mt-3 text-[18px] text-[#0f1111]/80">{s.sub}</p>
-                  <button onClick={() => quickRun("daily restock")} className="mt-6 btn-az-orange px-6 py-3 text-[15px] font-semibold">{s.cta} →</button>
+                  <button onClick={() => s.action ? quickRun("daily restock") : navigate({ to: s.route })} className="mt-6 btn-az-orange px-6 py-3 text-[15px] font-semibold">{s.cta} →</button>
                 </div>
                 <div className="grid grid-cols-4 gap-3">
                   {s.keywords.map((k, idx) => (
