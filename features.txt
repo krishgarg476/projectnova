@@ -1,0 +1,42 @@
+Unique Features for Amazon Now – Reimagining Urgent Shopping
+Situation-to-Cart
+User describes the situation instead of searching products.
+Example:
+“Friends coming over” → chips, cold drinks, snacks
+“Kid has fever” → medicine, ORS, thermometer
+Photo-to-Cart
+User uploads fridge/kitchen photo.
+AI detects missing/low-stock items and creates a refill cart.
+Use Meta.
+WhatsApp-style Shopping
+Chat-based shopping instead of traditional browsing.
+Example:
+“Need maggi ingredients” → Maggi, onion, tomato, masala
+Urgency Mode
+AI classifies urgency:
+High → medicines, baby products
+Medium → groceries
+Low → snacks
+Prioritizes fastest delivery.
+Predict Before Need
+Learns buying patterns.
+Example:
+“Milk usually finishes today” → one-tap reorder suggestion.
+Smart Bundles
+Suggests complementary products automatically.
+Example:
+Bread → butter, jam, eggs
+7. Any of the product suggestion/addition is not just based on general amazon analytics like bestseller/best rated/etc. But also on user’s purchase history. FOr example, it may be seen that the user always buys Juices of Raw Pressery, or cosmetics of Minimalist, etc.
+
+8. Family Context AI
+AI understands household patterns. Examples:
+Family of 4
+Vegetarian
+Child aged 5
+Orders milk every 3 days
+User:Need groceries for this week.,AI generates complete weekly cart automatically.
+9. User also has option to manually add context to NOW. Like, “I would like to have a Protein Powder ordered in first week of every month” or “Remind me to add Bread every alternate days”
+
+
+
+

@@ -21,6 +21,7 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
+import { Route as GroupDemoRouteImport } from './routes/group.demo'
 import { Route as GroupCartIdRouteImport } from './routes/group.$cartId'
 
 const VoiceRoute = VoiceRouteImport.update({
@@ -83,6 +84,11 @@ const TrackingOrderIdRoute = TrackingOrderIdRouteImport.update({
   path: '/tracking/$orderId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GroupDemoRoute = GroupDemoRouteImport.update({
+  id: '/group/demo',
+  path: '/group/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GroupCartIdRoute = GroupCartIdRouteImport.update({
   id: '/group/$cartId',
   path: '/group/$cartId',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/results': typeof ResultsRoute
   '/voice': typeof VoiceRoute
   '/group/$cartId': typeof GroupCartIdRoute
+  '/group/demo': typeof GroupDemoRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/results': typeof ResultsRoute
   '/voice': typeof VoiceRoute
   '/group/$cartId': typeof GroupCartIdRoute
+  '/group/demo': typeof GroupDemoRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/results': typeof ResultsRoute
   '/voice': typeof VoiceRoute
   '/group/$cartId': typeof GroupCartIdRoute
+  '/group/demo': typeof GroupDemoRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/voice'
     | '/group/$cartId'
+    | '/group/demo'
     | '/tracking/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/voice'
     | '/group/$cartId'
+    | '/group/demo'
     | '/tracking/$orderId'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/voice'
     | '/group/$cartId'
+    | '/group/demo'
     | '/tracking/$orderId'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   ResultsRoute: typeof ResultsRoute
   VoiceRoute: typeof VoiceRoute
   GroupCartIdRoute: typeof GroupCartIdRoute
+  GroupDemoRoute: typeof GroupDemoRoute
   TrackingOrderIdRoute: typeof TrackingOrderIdRoute
 }
 
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackingOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/group/demo': {
+      id: '/group/demo'
+      path: '/group/demo'
+      fullPath: '/group/demo'
+      preLoaderRoute: typeof GroupDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/group/$cartId': {
       id: '/group/$cartId'
       path: '/group/$cartId'
@@ -308,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResultsRoute: ResultsRoute,
   VoiceRoute: VoiceRoute,
   GroupCartIdRoute: GroupCartIdRoute,
+  GroupDemoRoute: GroupDemoRoute,
   TrackingOrderIdRoute: TrackingOrderIdRoute,
 }
 export const routeTree = rootRouteImport

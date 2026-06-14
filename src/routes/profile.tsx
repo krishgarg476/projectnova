@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { ProductImage } from "@/components/ProductImage";
 import { useStore } from "@/store";
+import { getDueStatus } from "@/lib/recurring";
 import { Leaf, Shield, MapPin, History, Heart, Activity, Pencil, Plus, X, Trash2, Camera, Star, Users } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
@@ -27,12 +28,13 @@ const ORDERS = [
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { userProfile, updateProfile, addresses, openAddAddress, deleteAddress, setSelectedAddress, selectedAddressId, dietaryPreferences, toggleDietary, familyMembers, updateFamilyMember, favoriteBrands, toggleBrand, crisisContacts, updateCrisisContact, addCrisisContact, deleteCrisisContact, generateResults } = useStore();
+  const { userProfile, updateProfile, addresses, openAddAddress, deleteAddress, setSelectedAddress, selectedAddressId, dietaryPreferences, toggleDietary, familyMembers, updateFamilyMember, favoriteBrands, toggleBrand, crisisContacts, updateCrisisContact, addCrisisContact, deleteCrisisContact, generateResults, recurringRules, addRecurringRule, deleteRecurringRule, fulfillRecurringRule } = useStore();
   const [pats, setPats] = useState(PATTERNS);
   const [editing, setEditing] = useState<string | null>(null);
   const [pendingDel, setPendingDel] = useState<string | null>(null);
   const [editContact, setEditContact] = useState<string | null>(null);
   const [editMember, setEditMember] = useState<string | null>(null);
+  const [newRule, setNewRule] = useState("");
 
   async function reorder(q: string) {
     await generateResults(q);
@@ -157,11 +159,49 @@ function ProfilePage() {
                 </div>
               ))}
               <div className="text-[12px] text-[#565959] mt-2">Recurring household needs:</div>
-              <ul className="text-[12px] space-y-1">
-                <li>🥛 Milk — every 3 days <span className="ai-badge">AI tracks this ✓</span></li>
-                <li>🔥 Cooking gas refill — every 3 weeks <span className="ai-badge">AI tracks this ✓</span></li>
-                <li>🥕 Vegetable restock — twice a week <span className="ai-badge">AI tracks this ✓</span></li>
+              {recurringRules.length === 0 && (
+                <div className="text-[12px] text-[#565959] italic">No recurring reminders yet — add one below.</div>
+              )}
+              <ul className="space-y-1.5">
+                {recurringRules.map((r) => {
+                  const { status, daysUntil } = getDueStatus(r.nextDueDate);
+                  const due = status === "overdue" || status === "due-today";
+                  return (
+                    <li key={r.id} className={`flex items-center justify-between gap-2 border rounded p-2 ${due ? "border-[#ff9900] bg-[#fff8ed]" : "border-[#d5d9d9]"}`}>
+                      <div className="min-w-0">
+                        <div className="font-semibold text-[12px] truncate">{r.itemName} — {r.frequencyLabel.toLowerCase()}</div>
+                        <div className={`text-[11px] ${status === "overdue" ? "text-[#b12704]" : status === "due-today" ? "text-[#cc6600]" : "text-[#565959]"}`}>
+                          {status === "overdue" ? `Overdue by ${Math.abs(daysUntil)} day(s)` : status === "due-today" ? "Due today" : `Due in ${daysUntil} day(s)`}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {due && (
+                          <button onClick={() => fulfillRecurringRule(r.id)} className="btn-az-yellow text-[11px] px-2">Add to cart</button>
+                        )}
+                        <button onClick={() => deleteRecurringRule(r.id)}><Trash2 className="w-3 h-3 text-[#b12704]" /></button>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (newRule.trim()) {
+                    addRecurringRule(newRule);
+                    setNewRule("");
+                  }
+                }}
+                className="flex gap-1 mt-2"
+              >
+                <input
+                  value={newRule}
+                  onChange={(e) => setNewRule(e.target.value)}
+                  placeholder='e.g. "Remind me to add Bread every alternate days"'
+                  className="flex-1 border border-[#d5d9d9] rounded px-2 py-1 text-[12px]"
+                />
+                <button type="submit" className="btn-az-yellow text-[11px] px-2 flex items-center gap-1 shrink-0"><Plus className="w-3 h-3" /> Add</button>
+              </form>
             </div>
           </Tile>
 
