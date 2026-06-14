@@ -1,0 +1,820 @@
+import { o as __toESM } from "../_runtime.mjs";
+import { d as Link, f as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
+import { t as purchaseHistory } from "./purchaseHistory-CKismEig.mjs";
+import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
+import { c as useStore, n as ProductImage, t as Layout } from "./Layout-BSXXmDwm.mjs";
+import { B as Activity, I as Check, L as Camera, N as ChevronRight, P as ChevronLeft, T as Leaf, _ as Mic, i as TriangleAlert, n as X, p as Plus, r as Users, s as Sparkles, t as Zap, z as ArrowRight } from "../_libs/lucide-react.mjs";
+import { a as AnimatePresence, n as useMotionValue, r as motion, t as animate } from "../_libs/framer-motion.mjs";
+import { t as ProductCard } from "./ProductCard-V1PP3TH5.mjs";
+import { t as Route } from "./routes-YPbp0ePt.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CAN4nILx.js
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
+function PredictivePulse() {
+	const [isVisible, setIsVisible] = (0, import_react.useState)(false);
+	const addCart = useStore((s) => s.addCartItem);
+	const navigate = useNavigate();
+	(0, import_react.useEffect)(() => {
+		if (purchaseHistory.predictedRestocks && purchaseHistory.predictedRestocks.length > 0) {
+			const t = setTimeout(() => setIsVisible(true), 2e3);
+			return () => clearTimeout(t);
+		}
+	}, []);
+	if (!purchaseHistory.predictedRestocks?.length) return null;
+	const item = purchaseHistory.predictedRestocks[0];
+	function handleAdd() {
+		addCart({
+			id: item.id,
+			name: item.name,
+			category: item.category,
+			price: item.price,
+			reasoning: item.reasoning,
+			imageKeyword: item.imageKeyword,
+			quantity: 1,
+			agentSource: "context"
+		});
+		setIsVisible(false);
+		navigate({ to: "/cart" });
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AnimatePresence, { children: isVisible && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(motion.div, {
+		initial: {
+			opacity: 0,
+			y: -50,
+			scale: .95
+		},
+		animate: {
+			opacity: 1,
+			y: 0,
+			scale: 1
+		},
+		exit: {
+			opacity: 0,
+			y: -20,
+			scale: .95
+		},
+		transition: {
+			duration: .4,
+			type: "spring",
+			bounce: .4
+		},
+		className: "fixed top-[80px] right-6 z-50 w-full max-w-sm",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "bg-white rounded-xl shadow-[0_15px_50px_rgba(0,0,0,0.2)] border border-[#e7e7e7] overflow-hidden flex flex-col",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "bg-gradient-to-r from-[#d4f0e8] to-[#8ed5be] px-4 py-2 flex items-center justify-between border-b border-[#cce6df]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "flex items-center gap-2 font-bold text-[#0f1111] text-[14px]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, { className: "w-4 h-4 text-[#008296]" }), "Predictive Pulse"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						onClick: () => setIsVisible(false),
+						className: "text-[#0f1111]/60 hover:text-[#0f1111] transition-colors p-1",
+						"aria-label": "Close prediction",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, { className: "w-4 h-4" })
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "p-4 flex gap-4 items-center",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "w-16 h-16 shrink-0 rounded bg-[#f7f7f7] flex items-center justify-center p-2 border border-[#e7e7e7]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+							keyword: item.imageKeyword,
+							alt: item.name
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "flex-1 min-w-0",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "text-[14px] font-semibold text-[#0f1111] leading-tight mb-1 truncate",
+							children: item.name
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "text-[12px] text-[#565959] leading-snug",
+							children: item.reasoning
+						})]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "px-4 pb-4",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+						onClick: handleAdd,
+						className: "w-full bg-[#ffd814] hover:bg-[#f7ca00] text-[#0f1111] font-semibold text-[13px] py-2 rounded-full border border-[#fcd200] shadow-[0_1px_2px_rgba(15,17,17,0.15)] flex items-center justify-center gap-2 transition-colors",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, { className: "w-4 h-4" }),
+							" One-Tap Reorder (₹",
+							item.price,
+							")"
+						]
+					})
+				})
+			]
+		})
+	}) });
+}
+var basketModel_default = {
+	classes: [
+		"Milk & Eggs",
+		"Chips & Soda",
+		"Vegetables & Bread",
+		"Rice & Dal",
+		"None"
+	],
+	features: [
+		"hour",
+		"dayOfWeek",
+		"isWeekend",
+		"daysSinceDairy",
+		"daysSinceSnacks",
+		"daysSinceProduce",
+		"daysSinceStaples"
+	],
+	learningRate: .3,
+	trees: /* @__PURE__ */ JSON.parse("{\"Milk & Eggs\":[{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.0793103448275858},\"right\":{\"value\":-0.1834983498349845}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":0.05384615384615422},\"right\":{\"value\":0.417283950617282}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.057843137254901686},\"right\":{\"value\":-0.13426294820717247}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":-0.15550351288056322},\"right\":{\"value\":-0.18830409356725103}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.0748087518854988},\"right\":{\"value\":-0.1735706789785663}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":0.0506098636034666},\"right\":{\"value\":0.3950708440095008}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.0555725615206783},\"right\":{\"value\":-0.12630670376445163}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.14740720615385267},\"right\":{\"value\":-0.18159727771536596}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.07011033730405644},\"right\":{\"value\":-0.16360432292641341}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.0003521774741053034},\"right\":{\"value\":0.33513272072908334}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.05312020911323299},\"right\":{\"value\":-0.11873063045621006}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":-0.13572484785499092},\"right\":{\"value\":-0.16554165146916147}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.06533147886515747},\"right\":{\"value\":-0.15311877097551896}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":0.04417904901560125},\"right\":{\"value\":0.35359184556954465}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.05060234932963732},\"right\":{\"value\":-0.11157205488315612}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.12812016638303023},\"right\":{\"value\":-0.15980307669561952}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.0605453436911226},\"right\":{\"value\":-0.14370774633073982}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":0.3596334551600566},\"right\":{\"value\":0.06019972709728525}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.04792946488180311},\"right\":{\"value\":-0.10489619695394506}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":-0.11730061758212428},\"right\":{\"value\":-0.14486449592849981}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":-0.05624783944985291},\"right\":{\"value\":-0.13331584476679764}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.008350381162296633},\"right\":{\"value\":0.2894272875551281}}},\"right\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":-0.04535974161646846},\"right\":{\"value\":-0.11833726648975407}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":1.5,\"left\":{\"value\":-0.06811915937557478},\"right\":{\"value\":-0.11620927316846524}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.05520956715154869},\"right\":{\"value\":-0.12607147304259078}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":0.06222670086833654},\"right\":{\"value\":0.3466805432275461}}},\"right\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":-0.04084273853754031},\"right\":{\"value\":-0.11087871707025666}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":1.5,\"left\":{\"value\":-0.06300851404719883},\"right\":{\"value\":-0.1088359497275784}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":-0.04917292879442401},\"right\":{\"value\":-0.1164475567500368}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.007592363472539282},\"right\":{\"value\":0.2592555055270442}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.037466126447453584},\"right\":{\"value\":-0.08800413378023964}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":1.5,\"left\":{\"value\":-0.1585326462354374},\"right\":{\"value\":-0.10378860040094928}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"value\":-0.04795642726894433},\"right\":{\"value\":-0.11050532851074285}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":13.5,\"left\":{\"value\":0.2470804211399115},\"right\":{\"value\":-0.010702375384846903}}},\"right\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"value\":-0.02990224576715402},\"right\":{\"value\":-0.09353453148241403}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":0.5,\"left\":{\"value\":-0.04844899019652221},\"right\":{\"value\":-0.09541767029243638}}}},{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":-0.042520517673583065},\"right\":{\"value\":-0.10230177882556883}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":0.049104015860501615},\"right\":{\"value\":0.3000335737244395}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.02945310025804189},\"right\":{\"value\":-0.07674769151208259}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":1.5,\"left\":{\"value\":-0.14690230589493739},\"right\":{\"value\":-0.09187104204237483}}}}],\"Chips & Soda\":[{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"hour\",\"threshold\":19.5,\"left\":{\"value\":-0.11061452513966645},\"right\":{\"value\":-0.03720930232558145}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":12.5,\"left\":{\"value\":-0.14389438943894417},\"right\":{\"value\":-0.1725877192982449}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":-0.12941176470588228},\"right\":{\"value\":-0.19999999999999987}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":0.008333333333333354},\"right\":{\"value\":0.5948717948717953}}}},{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.08783665758218873},\"right\":{\"value\":-0.12594430352580335}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":2.5,\"left\":{\"value\":-0.1397791794443601},\"right\":{\"value\":-0.16577770846276316}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.1092557049679099},\"right\":{\"value\":-0.1755571343486911}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":0.02646175911337298},\"right\":{\"value\":0.42949922519126854}}}},{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":7.5,\"left\":{\"value\":-0.08542413367600867},\"right\":{\"value\":-0.12602154915701}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":2.5,\"left\":{\"value\":-0.13023440218430007},\"right\":{\"value\":-0.15460408621363644}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.10246426068671508},\"right\":{\"value\":-0.166599413077018}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":0.026361641303365418},\"right\":{\"value\":0.40786078257959213}}}},{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.06336284784586803},\"right\":{\"value\":-0.10278611850202721}},\"right\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.14277989048088577},\"right\":{\"value\":-0.11873054829048364}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":-0.10956134964344318},\"right\":{\"value\":-0.17519872395120298}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":5.5,\"left\":{\"value\":0.10582713907993138},\"right\":{\"value\":0.6123225519352078}}}},{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":7.5,\"left\":{\"value\":-0.07534677464036216},\"right\":{\"value\":-0.11346062660194146}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":2.5,\"left\":{\"value\":-0.11159321518820117},\"right\":{\"value\":-0.13425455304934636}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.08861190160954777},\"right\":{\"value\":-0.15108248567790492}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":0.025153144601157317},\"right\":{\"value\":0.37018110799538606}}}},{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.06755219266052284},\"right\":{\"value\":-0.10130507019095178}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":2.5,\"left\":{\"value\":-0.10364259683550921},\"right\":{\"value\":-0.12528384911441312}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.08215603388464952},\"right\":{\"value\":-0.1431609130415478}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":5.5,\"left\":{\"value\":0.09456366172961056},\"right\":{\"value\":0.4130295041531111}}}},{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":12.5,\"left\":{\"feature\":\"hour\",\"threshold\":19.5,\"left\":{\"value\":-0.08282676289181419},\"right\":{\"value\":-0.019345872773996922}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":5.5,\"left\":{\"value\":-0.10805302399445296},\"right\":{\"value\":-0.1428916286587506}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":-0.0902668556877412},\"right\":{\"value\":-0.15229317580000662}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":0.002875852738273924},\"right\":{\"value\":0.44969117868059666}}}},{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":7.5,\"left\":{\"value\":-0.06078056213526616},\"right\":{\"value\":-0.09685696808494904}},\"right\":{\"feature\":\"hour\",\"threshold\":13.5,\"left\":{\"value\":-0.10837589527612795},\"right\":{\"value\":-0.0873369616774382}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.07031961644694813},\"right\":{\"value\":-0.13027568270267792}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":5.5,\"left\":{\"value\":0.08649037657939972},\"right\":{\"value\":0.3716439964366138}}}},{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":12.5,\"left\":{\"feature\":\"hour\",\"threshold\":12.5,\"left\":{\"value\":-0.08116553217698948},\"right\":{\"value\":-0.047385450643259684}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":5.5,\"left\":{\"value\":-0.0927040439558405},\"right\":{\"value\":-0.12705397583776623}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":-0.08010139280520344},\"right\":{\"value\":-0.1394237469793002}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":5.5,\"left\":{\"value\":0.07887966903167207},\"right\":{\"value\":0.4728531601114882}}}},{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":0.5,\"left\":{\"value\":-0.10667773930177288},\"right\":{\"value\":-0.05602106753197845}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":2.5,\"left\":{\"value\":-0.07525910663891713},\"right\":{\"value\":-0.09558727897456151}}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.06030865588965493},\"right\":{\"value\":-0.11907828400117684}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":0.021751367090347726},\"right\":{\"value\":0.28109703832111005}}}}],\"Vegetables & Bread\":[{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.03902439024390229},\"right\":{\"value\":-0.12295597484276875}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.18757763975155373},\"right\":{\"value\":-0.1595782073813724}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":0.05581395348837221},\"right\":{\"value\":0.4196319018404896}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":-0.11489361702127636},\"right\":{\"value\":-0.18412698412698392}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.03759041865988072},\"right\":{\"value\":-0.11663660147043199}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.17616795883791067},\"right\":{\"value\":-0.14938155824825647}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":0.05323255214177398},\"right\":{\"value\":0.39833565291488543}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":7.5,\"left\":{\"value\":-0.08718990494457013},\"right\":{\"value\":-0.1476965714006515}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.035736611938009366},\"right\":{\"value\":-0.11044536440928815}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.16499274463578717},\"right\":{\"value\":-0.13934084728054896}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":0.05139463941784515},\"right\":{\"value\":0.3773858765229277}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":7.5,\"left\":{\"value\":-0.08290191064145025},\"right\":{\"value\":-0.13847770605929718}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.0341040324847445},\"right\":{\"value\":-0.10429499510634183}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.1546221802944743},\"right\":{\"value\":-0.12923683151866328}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":0.049939320050742454},\"right\":{\"value\":0.35682053633267974}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.09609540235270793},\"right\":{\"value\":-0.14840949709613974}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.031893824258606554},\"right\":{\"value\":-0.09843948739328266}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.1444371979142083},\"right\":{\"value\":-0.11995547385499764}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"value\":0.016498948250979462},\"right\":{\"value\":0.2957050886915862}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.08945763649446913},\"right\":{\"value\":-0.13966976667467326}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.028227002199226876},\"right\":{\"value\":-0.09222246748953797}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":6.5,\"left\":{\"value\":-0.12440402376464715},\"right\":{\"value\":-0.08686224674791171}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"value\":0.016660371266931713},\"right\":{\"value\":0.27856813853065476}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.08253966204453538},\"right\":{\"value\":-0.13157752194902347}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":1.5,\"left\":{\"value\":-0.025978332445573574},\"right\":{\"value\":-0.08663054027151348}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":6.5,\"left\":{\"value\":-0.11582845161454362},\"right\":{\"value\":-0.07936356270457569}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":4.5,\"left\":{\"value\":0.04336866710834728},\"right\":{\"value\":0.30182231925378344}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.07618870511117437},\"right\":{\"value\":-0.12395952106864207}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":0.5,\"left\":{\"value\":-0.005392918841857594},\"right\":{\"value\":-0.0778732456272905}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.1209175483546028},\"right\":{\"value\":-0.09768192251546118}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"value\":0.016680300391031907},\"right\":{\"value\":0.24933257267667713}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":-0.07043141841448466},\"right\":{\"value\":-0.11673452104351671}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":5.5,\"left\":{\"value\":-0.0767708270801317},\"right\":{\"value\":-0.02040604649131198}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":6.5,\"left\":{\"value\":-0.10081862050155099},\"right\":{\"value\":-0.06489284983116635}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":5.5,\"left\":{\"value\":0.05946761708994545},\"right\":{\"value\":0.31366738963626917}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":2.5,\"left\":{\"value\":-0.10708127471887967},\"right\":{\"value\":-0.062388007183398896}}}},{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":0.5,\"left\":{\"value\":0.0010721938291616486},\"right\":{\"value\":-0.06842404179799191}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":2.5,\"left\":{\"value\":-0.10684616533077097},\"right\":{\"value\":-0.08422263727531264}}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"value\":0.01672012247332665},\"right\":{\"value\":0.22460318778636013}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":2.5,\"left\":{\"value\":-0.10152846603624872},\"right\":{\"value\":-0.05727671118234721}}}}],\"Rice & Dal\":[{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"value\":-0.08929889298893025},\"right\":{\"value\":-0.13785310734463416}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":1.5,\"left\":{\"value\":0.27999999999999986},\"right\":{\"value\":0.06760563380281681}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":0.3688405797101432},\"right\":{\"value\":0.23150684931506735}},\"right\":{\"feature\":\"hour\",\"threshold\":17.5,\"left\":{\"value\":0.5628083491461155},\"right\":{\"value\":0.4029411764705874}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"value\":-0.13247299860631628},\"right\":{\"value\":-0.08367316473800895}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":1.5,\"left\":{\"value\":0.26553596776148464},\"right\":{\"value\":0.06451251254839928}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":0.3465353869586817},\"right\":{\"value\":0.21742892252513543}},\"right\":{\"feature\":\"hour\",\"threshold\":17.5,\"left\":{\"value\":0.5281406914487117},\"right\":{\"value\":0.3788975943799379}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"value\":-0.1255005316781783},\"right\":{\"value\":-0.07862195262156467}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":1.5,\"left\":{\"value\":0.25144895241659787},\"right\":{\"value\":0.06158851181402717}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"value\":0.37476203131733915},\"right\":{\"value\":0.2279618989393706}},\"right\":{\"feature\":\"hour\",\"threshold\":17.5,\"left\":{\"value\":0.4922778037055549},\"right\":{\"value\":0.3547762545833669}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"value\":-0.11866202546194606},\"right\":{\"value\":-0.07375242938171975}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":1.5,\"left\":{\"value\":0.2378088836623368},\"right\":{\"value\":0.05904912969189011}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":0.29025064801072004},\"right\":{\"value\":0.16611582368121214}},\"right\":{\"feature\":\"hour\",\"threshold\":17.5,\"left\":{\"value\":0.4561389355944629},\"right\":{\"value\":0.3311431289924296}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"value\":-0.06800655114253976},\"right\":{\"value\":-0.1122513835807718}},\"right\":{\"feature\":\"daysSinceDairy\",\"threshold\":5.5,\"left\":{\"value\":0.14613273447519345},\"right\":{\"value\":-0.021590941669773357}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":0.28559144229824723},\"right\":{\"value\":0.17449950648260448}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":20.5,\"left\":{\"value\":0.37682548250213865},\"right\":{\"value\":0.5016727146532538}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"value\":-0.10684425562031534},\"right\":{\"value\":-0.06313061033545857}},\"right\":{\"feature\":\"daysSinceProduce\",\"threshold\":1.5,\"left\":{\"value\":0.21744739523508833},\"right\":{\"value\":0.05337175838599539}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":17.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":0.2765531283679081},\"right\":{\"value\":0.1656068486557176}},\"right\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"value\":0.47248490592787323},\"right\":{\"value\":0.36667080580110883}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":10.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"value\":-0.10124421225252538},\"right\":{\"value\":-0.058903836841744155}},\"right\":{\"feature\":\"hour\",\"threshold\":18.5,\"left\":{\"value\":0.1346203633992925},\"right\":{\"value\":-0.028673947967315847}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"value\":0.28743303508136747},\"right\":{\"value\":0.1679921592307795}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":20.5,\"left\":{\"value\":0.31865319425866645},\"right\":{\"value\":0.4284397330934145}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":-0.06638906155391386},\"right\":{\"value\":-0.12262739604959037}},\"right\":{\"feature\":\"hour\",\"threshold\":3.5,\"left\":{\"value\":0.01971291518496368},\"right\":{\"value\":-0.06755236236611245}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":0.2063086129164172},\"right\":{\"value\":0.10373072258048832}},\"right\":{\"feature\":\"hour\",\"threshold\":17.5,\"left\":{\"value\":0.32863574505095006},\"right\":{\"value\":0.2325208593658852}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceProduce\",\"threshold\":3.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":-0.016550031579648076},\"right\":{\"value\":-0.08251683481302514}},\"right\":{\"feature\":\"daysSinceSnacks\",\"threshold\":3.5,\"left\":{\"value\":-0.11739679911773031},\"right\":{\"value\":-0.07516309219499841}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":14.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"value\":0.2469653234212709},\"right\":{\"value\":0.11534643610801142}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":17.5,\"left\":{\"value\":0.22560463215493362},\"right\":{\"value\":0.30671859128036066}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":4.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":3.5,\"left\":{\"value\":-0.058828279318344404},\"right\":{\"value\":-0.1111582991693041}},\"right\":{\"feature\":\"hour\",\"threshold\":3.5,\"left\":{\"value\":0.02446792330971531},\"right\":{\"value\":-0.05859376576588773}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":14.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":4.5,\"left\":{\"value\":0.17172839678734672},\"right\":{\"value\":0.06942657775646494}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":20.5,\"left\":{\"value\":0.23498763156614316},\"right\":{\"value\":0.33926410951459424}}}}],\"None\":[{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":0.36474820143884723},\"right\":{\"value\":0.12499999999999992}},\"right\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.01011673151750965},\"right\":{\"value\":0.2291784702549585}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.0009685230024213007},\"right\":{\"value\":0.1488372093023255}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.07674418604651112},\"right\":{\"value\":-0.13991416309012822}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":0.34140259505793086},\"right\":{\"value\":0.11703432390085844}},\"right\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.009359305137684149},\"right\":{\"value\":0.2146235513764302}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.0009195253136615578},\"right\":{\"value\":0.14232702100648498}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.07019976229418384},\"right\":{\"value\":-0.13059829439548312}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":0.3178207367079829},\"right\":{\"value\":0.10961609333130037}},\"right\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.009058869777807848},\"right\":{\"value\":0.20045792581856525}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.0015364835704337779},\"right\":{\"value\":0.13620298970409955}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.06298940982563589},\"right\":{\"value\":-0.12105813054445884}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":0.2943485963843747},\"right\":{\"value\":0.10410973967869623}},\"right\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.009048064577451458},\"right\":{\"value\":0.186751569800422}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.002708626677423016},\"right\":{\"value\":0.130090991157881}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":1.5,\"left\":{\"value\":-0.03485624195147724},\"right\":{\"value\":-0.09316893236012451}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.14226668785454072},\"right\":{\"value\":0.27792103104724497}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.009780245227001218},\"right\":{\"value\":0.20262619044115063}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.0042014555388684895},\"right\":{\"value\":0.12605658002674885}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.04705389745073929},\"right\":{\"value\":-0.10352971373902063}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.1331810753703954},\"right\":{\"value\":0.2571910410311958}},\"right\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.009682119959330283},\"right\":{\"value\":0.18796222903964}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.005419194746450009},\"right\":{\"value\":0.12188882513120823}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":1.5,\"left\":{\"value\":-0.02061639847366446},\"right\":{\"value\":-0.07656112952217232}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"value\":0.24395470523417415},\"right\":{\"value\":0.08410232034178189}},\"right\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.0004089158081477767},\"right\":{\"value\":0.14861057671597286}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":21.5,\"left\":{\"value\":0.0077886728330028385},\"right\":{\"value\":0.11887457312259495}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.0334999353774512},\"right\":{\"value\":-0.08601064314313873}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"hour\",\"threshold\":16.5,\"left\":{\"feature\":\"hour\",\"threshold\":10.5,\"left\":{\"value\":0.11440560427490007},\"right\":{\"value\":0.22320139153003668}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":4.5,\"left\":{\"value\":0.10358923635562241},\"right\":{\"value\":-0.06850420042454265}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":15.5,\"left\":{\"feature\":\"hour\",\"threshold\":20.5,\"left\":{\"value\":0.007718784178441652},\"right\":{\"value\":0.09977627364873697}},\"right\":{\"feature\":\"dayOfWeek\",\"threshold\":1.5,\"left\":{\"value\":-0.007310846645109505},\"right\":{\"value\":-0.061616092010871266}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":9.5,\"left\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"feature\":\"daysSinceSnacks\",\"threshold\":2.5,\"left\":{\"value\":0.12336132232889947},\"right\":{\"value\":0.2433927946332273}},\"right\":{\"feature\":\"hour\",\"threshold\":9.5,\"left\":{\"value\":-0.03881672423352355},\"right\":{\"value\":0.13670818181667568}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":14.5,\"left\":{\"feature\":\"daysSinceDairy\",\"threshold\":6.5,\"left\":{\"value\":0.02013512442466312},\"right\":{\"value\":0.19050645915136213}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"value\":-0.016253871529514553},\"right\":{\"value\":-0.07084733739425804}}}},{\"feature\":\"daysSinceStaples\",\"threshold\":11.5,\"left\":{\"feature\":\"daysSinceStaples\",\"threshold\":3.5,\"left\":{\"feature\":\"dayOfWeek\",\"threshold\":1.5,\"left\":{\"value\":0.24705640258183148},\"right\":{\"value\":0.1397444194991949}},\"right\":{\"feature\":\"hour\",\"threshold\":5.5,\"left\":{\"value\":0.16102623019081333},\"right\":{\"value\":0.05336746541044513}}},\"right\":{\"feature\":\"daysSinceStaples\",\"threshold\":19.5,\"left\":{\"feature\":\"dayOfWeek\",\"threshold\":1.5,\"left\":{\"value\":0.045652114357060784},\"right\":{\"value\":-0.013879476923571454}},\"right\":{\"feature\":\"hour\",\"threshold\":4.5,\"left\":{\"value\":0.010198601637611321},\"right\":{\"value\":-0.08452394761056803}}}}]}")
+};
+function evalTree(node, ctx) {
+	if ("value" in node) return node.value;
+	return ctx[node.feature] <= node.threshold ? evalTree(node.left, ctx) : evalTree(node.right, ctx);
+}
+function softmax(scores) {
+	const max = Math.max(...scores);
+	const exps = scores.map((s) => Math.exp(s - max));
+	const sum = exps.reduce((a, b) => a + b, 0);
+	return exps.map((e) => e / sum);
+}
+var BASKET_ITEMS = {
+	"Milk & Eggs": [{
+		id: "d1",
+		name: "Amul Toned Milk 1L",
+		price: 64,
+		category: "Dairy",
+		imageKeyword: "milk-carton"
+	}, {
+		id: "d5",
+		name: "Farm Eggs (12-pack)",
+		price: 96,
+		category: "Dairy",
+		imageKeyword: "farm-eggs"
+	}],
+	"Chips & Soda": [{
+		id: "s1",
+		name: "Lay's Party Pack (6 flavours)",
+		price: 299,
+		category: "Snacks",
+		imageKeyword: "potato-chips-bowl"
+	}, {
+		id: "s2",
+		name: "Coca-Cola 1.25L (2-pack)",
+		price: 180,
+		category: "Beverages",
+		imageKeyword: "coca-cola-bottle"
+	}],
+	"Vegetables & Bread": [{
+		id: "d8",
+		name: "Fresh Mixed Vegetables 2kg",
+		price: 280,
+		category: "Produce",
+		imageKeyword: "mixed-vegetables"
+	}, {
+		id: "d2",
+		name: "Whole Wheat Bread",
+		price: 50,
+		category: "Bakery",
+		imageKeyword: "brown-bread-loaf"
+	}],
+	"Rice & Dal": [{
+		id: "d6",
+		name: "Premium Basmati Rice 5kg",
+		price: 549,
+		category: "Staples",
+		imageKeyword: "basmati-rice"
+	}, {
+		id: "d7",
+		name: "Tata Sampann Toor Dal 1kg",
+		price: 169,
+		category: "Staples",
+		imageKeyword: "toor-dal"
+	}]
+};
+var CONFIDENCE_THRESHOLD = .35;
+function predictNextBasket(ctx) {
+	const model = basketModel_default;
+	const probs = softmax(model.classes.map((cls) => (model.trees[cls] || []).reduce((sum, tree) => sum + model.learningRate * evalTree(tree, ctx), 0)));
+	let bestIdx = 0;
+	for (let i = 1; i < probs.length; i++) if (probs[i] > probs[bestIdx]) bestIdx = i;
+	const label = model.classes[bestIdx];
+	const confidence = probs[bestIdx];
+	const items = BASKET_ITEMS[label];
+	if (label === "None" || !items || confidence < CONFIDENCE_THRESHOLD) return null;
+	return {
+		label,
+		items,
+		confidence: Math.round(confidence * 100)
+	};
+}
+var MOCK_DAYS_SINCE_LAST_PURCHASE = {
+	dairy: 7,
+	snacks: 9,
+	produce: 6,
+	staples: 8
+};
+function getCurrentSessionContext() {
+	const now = /* @__PURE__ */ new Date();
+	const dayOfWeek = now.getDay();
+	return {
+		hour: now.getHours(),
+		dayOfWeek,
+		isWeekend: dayOfWeek === 0 || dayOfWeek === 6 ? 1 : 0,
+		daysSinceDairy: MOCK_DAYS_SINCE_LAST_PURCHASE.dairy,
+		daysSinceSnacks: MOCK_DAYS_SINCE_LAST_PURCHASE.snacks,
+		daysSinceProduce: MOCK_DAYS_SINCE_LAST_PURCHASE.produce,
+		daysSinceStaples: MOCK_DAYS_SINCE_LAST_PURCHASE.staples
+	};
+}
+var HANDLE_SIZE = 56;
+function ZeroSecondCart() {
+	const navigate = useNavigate();
+	const addCartItem = useStore((s) => s.addCartItem);
+	const [dispatched, setDispatched] = (0, import_react.useState)(false);
+	const trackRef = (0, import_react.useRef)(null);
+	const x = useMotionValue(0);
+	const prediction = (0, import_react.useMemo)(() => predictNextBasket(getCurrentSessionContext()), []);
+	if (!prediction) return null;
+	function dispatch() {
+		if (dispatched || !prediction) return;
+		for (const item of prediction.items) addCartItem({
+			id: item.id,
+			name: item.name,
+			price: item.price,
+			category: item.category,
+			imageKeyword: item.imageKeyword,
+			reasoning: `Zero-Second Cart — ${prediction.confidence}% likely you're out of ${prediction.label}, based on the time and your usual pattern.`,
+			agentSource: "context"
+		});
+		setDispatched(true);
+		setTimeout(() => navigate({ to: "/cart" }), 700);
+	}
+	function handleDragEnd() {
+		const track = trackRef.current;
+		if (!track) return;
+		const maxX = track.offsetWidth - HANDLE_SIZE;
+		if (x.get() > maxX * .6) {
+			animate(x, maxX, {
+				type: "spring",
+				stiffness: 300,
+				damping: 30
+			});
+			dispatch();
+		} else animate(x, 0, {
+			type: "spring",
+			stiffness: 400,
+			damping: 30
+		});
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "max-w-[1500px] mx-auto px-4 pt-4",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "az-card p-4 sm:p-5 border-2 border-[#ff9900]/40 bg-gradient-to-r from-[#fff8ed] to-white",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex items-center gap-2 text-[12px] font-bold text-[#cc6600] uppercase tracking-wide",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Zap, { className: "w-4 h-4" }), " Zero-Second Cart"]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex flex-wrap items-center gap-4 mt-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "flex -space-x-3 shrink-0",
+						children: prediction.items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "w-14 h-14 rounded-full bg-[#f3f3f3] border-2 border-white overflow-hidden shadow",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+								keyword: item.imageKeyword,
+								seed: item.id,
+								size: 100,
+								className: "w-full h-full object-cover"
+							})
+						}, item.id))
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "text-[14px] flex-1 min-w-[200px]",
+						children: [
+							"There's a ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+								className: "font-bold",
+								children: [prediction.confidence, "% chance"]
+							}),
+							" you're out of",
+							" ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "font-bold",
+								children: prediction.label
+							}),
+							" right now — want it dispatched?"
+						]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					ref: trackRef,
+					className: "relative h-14 rounded-full bg-[#fff3e0] mt-4 overflow-hidden select-none touch-none",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "absolute inset-0 flex items-center justify-center text-[13px] font-semibold text-[#cc6600] pointer-events-none px-16 text-center",
+						children: dispatched ? "Dispatched — heading to your cart..." : `Swipe to dispatch ${prediction.label} →`
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(motion.div, {
+						drag: dispatched ? false : "x",
+						dragConstraints: trackRef,
+						dragElastic: 0,
+						dragMomentum: false,
+						style: { x },
+						onDragEnd: handleDragEnd,
+						className: "absolute left-0 top-0 h-14 w-14 rounded-full bg-[#ff9900] flex items-center justify-center text-white shadow-md cursor-grab active:cursor-grabbing",
+						children: dispatched ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, { className: "w-5 h-5" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "w-5 h-5" })
+					})]
+				})
+			]
+		})
+	});
+}
+var SLIDES = [
+	{
+		headline: "Tell Now what's going on.",
+		sub: "AI-powered urgent shopping — describe your situation, get your cart instantly.",
+		cta: "Try it now",
+		keywords: [
+			"lunch-box",
+			"soda-can",
+			"popcorn",
+			"medicine",
+			"tissue",
+			"milk-carton",
+			"bread-loaf",
+			"battery"
+		],
+		bg: "linear-gradient(135deg, #e8e4ff 0%, #c8b8ff 100%)"
+	},
+	{
+		headline: "Your next 24 hours, predicted.",
+		sub: "Predictive Pulse learns your patterns — so the cart is ready before you need it.",
+		cta: "See your Pulse",
+		keywords: [
+			"coffee-cup",
+			"fried-eggs",
+			"salad",
+			"pasta",
+			"cookies",
+			"tea",
+			"tacos",
+			"pizza"
+		],
+		bg: "linear-gradient(135deg, #d4f0e8 0%, #8ed5be 100%)"
+	},
+	{
+		headline: "Snap your fridge. Get your cart.",
+		sub: "Fridge Whisperer uses vision AI to spot what's missing — and restocks it.",
+		cta: "Try Fridge Whisperer",
+		keywords: [
+			"lettuce",
+			"carrot",
+			"eggs",
+			"cheese-block",
+			"meat",
+			"apple",
+			"milk-bottle",
+			"butter"
+		],
+		bg: "linear-gradient(135deg, #ffe5cc 0%, #ffb380 100%)"
+	}
+];
+function Home() {
+	const { deals, crisis } = Route.useLoaderData();
+	const [slide, setSlide] = (0, import_react.useState)(0);
+	const navigate = useNavigate();
+	const generate = useStore((s) => s.generateResults);
+	const addCart = useStore((s) => s.addCartItem);
+	const openCrisis = useStore((s) => s.openCrisisTriage);
+	(0, import_react.useEffect)(() => {
+		const t = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), 5500);
+		return () => clearInterval(t);
+	}, []);
+	async function quickRun(q) {
+		await generate(q);
+		navigate({ to: "/results" });
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Layout, { children: [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ZeroSecondCart, {}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PredictivePulse, {}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "bg-[#eaeded]",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "relative h-[380px] overflow-hidden",
+				children: [
+					SLIDES.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "absolute inset-0 transition-opacity duration-700",
+						style: {
+							background: s.bg,
+							opacity: i === slide ? 1 : 0
+						},
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "max-w-[1500px] mx-auto h-full px-12 flex items-center justify-between gap-12",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "max-w-xl",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+										className: "text-[44px] leading-tight font-extrabold text-[#0f1111]",
+										children: s.headline
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										className: "mt-3 text-[18px] text-[#0f1111]/80",
+										children: s.sub
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+										onClick: () => quickRun("daily restock"),
+										className: "mt-6 btn-az-orange px-6 py-3 text-[15px] font-semibold",
+										children: [s.cta, " →"]
+									})
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "grid grid-cols-4 gap-3",
+								children: s.keywords.map((k, idx) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "w-20 h-20 rounded-xl overflow-hidden bg-white/80 shadow-sm",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+										keyword: k,
+										seed: `hero-${i}-${idx}`,
+										size: 200,
+										className: "w-full h-full object-cover"
+									})
+								}, idx))
+							})]
+						})
+					}, i)),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						onClick: () => setSlide((s) => (s - 1 + SLIDES.length) % SLIDES.length),
+						className: "absolute left-2 top-1/2 -translate-y-1/2 w-10 h-16 bg-white/30 hover:bg-white/60 flex items-center justify-center rounded",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, { className: "w-6 h-6" })
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						onClick: () => setSlide((s) => (s + 1) % SLIDES.length),
+						className: "absolute right-2 top-1/2 -translate-y-1/2 w-10 h-16 bg-white/30 hover:bg-white/60 flex items-center justify-center rounded",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, { className: "w-6 h-6" })
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5",
+						children: SLIDES.map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: `h-1.5 rounded-full transition-all ${i === slide ? "bg-[#131921] w-6" : "bg-white/70 w-2"}` }, i))
+					})
+				]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "max-w-[1500px] mx-auto px-4 -mt-16 relative z-10 space-y-4",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FourColRow, { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Tell Now what's happening",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "bg-[#f3f3f3] aspect-[4/3] rounded overflow-hidden",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+									keyword: "smartphone-app",
+									seed: "tile-tell",
+									size: 400,
+									className: "w-full h-full object-cover"
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								onClick: () => quickRun("guests arriving in an hour"),
+								className: "az-link text-[13px] mt-2 text-left",
+								children: "Try the AI Council →"
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tile, {
+							title: "Shop by situation",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "grid grid-cols-2 gap-2",
+								children: [
+									{
+										l: "Guests arriving",
+										k: "party-snacks",
+										q: "guests arriving in an hour"
+									},
+									{
+										l: "Feeling unwell",
+										k: "medicine-tea",
+										q: "feeling unwell, body aches"
+									},
+									{
+										l: "Power cut",
+										k: "candle-torch",
+										q: "power cut, fridge items at risk"
+									},
+									{
+										l: "Just got home",
+										k: "ready-meal",
+										q: "just got home, starving"
+									}
+								].map((x) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+									onClick: () => quickRun(x.q),
+									className: "bg-[#f3f3f3] hover:bg-[#e9e9e9] aspect-square rounded overflow-hidden flex flex-col items-center justify-end gap-1 relative",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+										keyword: x.k,
+										seed: x.l,
+										size: 200,
+										className: "absolute inset-0 w-full h-full object-cover opacity-90"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "relative bg-white/95 text-[11px] w-full text-center py-1 font-semibold",
+										children: x.l
+									})]
+								}, x.l))
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Top picks from your patterns",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "space-y-2",
+								children: [
+									{
+										k: "popcorn",
+										n: "Snack Pack — Tonight 7 PM"
+									},
+									{
+										k: "milk-carton",
+										n: "Milk restock — Tomorrow 8 AM"
+									},
+									{
+										k: "coffee-sachet",
+										n: "Coffee sachets — Tomorrow morning"
+									}
+								].map((x) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "w-10 h-10 bg-[#f3f3f3] rounded overflow-hidden",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+											keyword: x.k,
+											seed: x.n,
+											size: 100,
+											className: "w-full h-full object-cover"
+										})
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "text-[12px] flex-1",
+										children: x.n
+									})]
+								}, x.n))
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/pulse",
+								className: "az-link text-[13px] block mt-2",
+								children: "Explore your Pulse →"
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Crisis-ready essentials",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "grid grid-cols-2 gap-2",
+								children: [
+									{
+										k: "ors-sachet",
+										l: "ORS"
+									},
+									{
+										k: "flashlight",
+										l: "Flashlight"
+									},
+									{
+										k: "candles",
+										l: "Candles"
+									},
+									{
+										k: "first-aid",
+										l: "First-aid"
+									}
+								].map((x) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "bg-[#fff5f3] aspect-square rounded overflow-hidden relative",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductImage, {
+										keyword: x.k,
+										seed: x.l,
+										size: 200,
+										className: "absolute inset-0 w-full h-full object-cover"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "absolute bottom-0 inset-x-0 bg-white/95 text-[11px] text-center py-1 font-semibold",
+										children: x.l
+									})]
+								}, x.l))
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								onClick: openCrisis,
+								className: "az-link text-[13px] block mt-2 text-left",
+								children: "Learn about Crisis Mode →"
+							})]
+						})
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "az-card overflow-hidden",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "bg-gradient-to-r from-[#dde9f5] to-[#f3e5ff] p-6 flex items-center justify-between gap-6",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+								className: "text-[22px] font-bold flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, { className: "w-6 h-6 text-[#5848bc]" }), " Group Carts — split the bill, automatically."]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "text-[14px] text-[#565959] mt-1",
+								children: "Share one cart with friends. Each person pays their share."
+							})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/group/$cartId",
+								params: { cartId: "demo" },
+								className: "btn-az-orange px-6 py-3 font-semibold whitespace-nowrap",
+								children: "Create a group cart →"
+							})]
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FourColRow, { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Eco Impact this month",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "flex items-center gap-3",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "relative w-20 h-20",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", {
+										viewBox: "0 0 36 36",
+										className: "w-20 h-20 -rotate-90",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
+											cx: "18",
+											cy: "18",
+											r: "14",
+											fill: "none",
+											stroke: "#eee",
+											strokeWidth: "4"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
+											cx: "18",
+											cy: "18",
+											r: "14",
+											fill: "none",
+											stroke: "#007600",
+											strokeWidth: "4",
+											strokeDasharray: "88",
+											strokeDashoffset: "33",
+											strokeLinecap: "round"
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Leaf, { className: "w-6 h-6 text-[#007600] absolute inset-0 m-auto" })]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "text-[20px] font-bold",
+									children: "1.2 kg"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "text-[12px] text-[#565959]",
+									children: "CO₂ saved via bundled deliveries"
+								})] })]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/eco-impact",
+								className: "az-link text-[13px] block mt-2",
+								children: "View Eco Impact →"
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Fridge Whisperer",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "bg-[#fff7ec] aspect-[4/3] rounded flex items-center justify-center",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Camera, { className: "w-12 h-12 text-[#ff9900]" })
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "text-[12px] mt-2 text-[#565959]",
+									children: "Snap a photo, get a cart."
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+									to: "/fridge-whisperer",
+									className: "az-link text-[13px] block mt-1",
+									children: "Open Fridge Whisperer →"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Voice Mode",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "bg-[#efeaff] aspect-[4/3] rounded flex items-center justify-center",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mic, { className: "w-12 h-12 text-[#5848bc]" })
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "text-[12px] mt-2 text-[#565959]",
+									children: "Hands busy? Just talk to Now."
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+									to: "/voice",
+									className: "az-link text-[13px] block mt-1",
+									children: "Start Voice Mode →"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tile, {
+							title: "Household Patterns",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "bg-[#f3f3f3] aspect-[4/3] rounded flex items-end justify-around p-3",
+								children: [
+									40,
+									65,
+									35,
+									80,
+									55,
+									90,
+									70
+								].map((h, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "w-3 rounded-t bg-[#5848bc]",
+									style: { height: `${h}%` }
+								}, i))
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/profile",
+								className: "az-link text-[13px] block mt-2",
+								children: "View patterns →"
+							})]
+						})
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "az-card p-5",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "flex items-center justify-between mb-3",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+								className: "text-[21px] font-bold",
+								children: "Recommended for you"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3",
+							children: deals.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductCard, {
+								p: {
+									...p,
+									imageKeyword: p.image_keyword || p.imageKeyword
+								},
+								onAdd: () => addCart({
+									id: p.id,
+									name: p.name,
+									category: "Deal",
+									price: p.price,
+									originalPrice: p.originalPrice || p.price * 1.2,
+									reasoning: "Added from Recommended for you",
+									imageKeyword: p.image_keyword || p.imageKeyword || "product",
+									brand: p.brand,
+									isEco: p.isEco
+								})
+							}, p.id))
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "az-card p-5",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "flex items-center justify-between mb-3",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+								className: "text-[21px] font-bold flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TriangleAlert, { className: "w-5 h-5 text-[#b12704]" }), " Best Sellers in Crisis Essentials"]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+								onClick: openCrisis,
+								className: "az-link text-[13px]",
+								children: "Open Crisis Mode →"
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3",
+							children: crisis.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductCard, {
+								p: {
+									...p,
+									imageKeyword: p.image_keyword || p.imageKeyword
+								},
+								onAdd: () => addCart({
+									id: p.id,
+									name: p.name,
+									category: "Emergency",
+									price: p.price,
+									originalPrice: p.originalPrice || p.price * 1.2,
+									reasoning: "Crisis essentials best-seller",
+									imageKeyword: p.image_keyword || p.imageKeyword || "product",
+									agentSource: "speed"
+								})
+							}, p.id))
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						className: "az-card p-5 mb-8",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "flex items-center justify-between mb-3",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+								className: "text-[21px] font-bold flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, { className: "w-5 h-5 text-[#5848bc]" }), " Your Predictive Pulse"]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/pulse",
+								className: "az-link text-[13px]",
+								children: "View full timeline →"
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+							className: "text-[14px] text-[#565959] flex items-center gap-2",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, { className: "w-4 h-4 text-[#5848bc]" }),
+								"Based on your last 30 days, Now predicts ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "3 needs in the next 24 hours" }),
+								"."
+							]
+						})]
+					})
+				]
+			})]
+		})
+	] });
+}
+function FourColRow({ children }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "az-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#d5d9d9]",
+		children
+	});
+}
+function Tile({ title, children }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "p-5",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+			className: "font-bold text-[18px] mb-3",
+			children: title
+		}), children]
+	});
+}
+//#endregion
+export { Home as component };
