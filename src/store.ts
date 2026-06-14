@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { keywordForName } from "@/lib/catalog";
+import { parseRecurringInput, addDays } from "@/lib/recurring";
+import productCatalog from "@/lib/data/productCatalog.json";
 
 export type AgentKey = "speed" | "context" | "health";
 export type Urgency = "normal" | "high" | "critical";
@@ -50,6 +52,17 @@ export interface FamilyMember { id: string; name: string; age: number; note?: st
 
 export interface FavoriteBrand { name: string; category: string; orderCount: number; prioritize: boolean; }
 
+export interface RecurringRule {
+  id: string;
+  itemName: string;
+  frequencyLabel: string;
+  frequencyDays: number;
+  rawInput: string;
+  nextDueDate: string;
+  price: number;
+  imageKeyword: string;
+}
+
 export interface CrisisContact { id: string; name: string; relation: string; phone: string; }
 
 interface AgentVerdicts { speed: string; context: string; health: string; }
@@ -82,6 +95,7 @@ interface AppState {
   familyMembers: FamilyMember[];
   favoriteBrands: FavoriteBrand[];
   crisisContacts: CrisisContact[];
+  recurringRules: RecurringRule[];
 
   productDetailFor: CartItem | null;
   addressSelectorOpen: boolean;
@@ -114,6 +128,10 @@ interface AppState {
   toggleBrand: (name: string) => void;
 
   updateFamilyMember: (id: string, m: Partial<FamilyMember>) => void;
+
+  addRecurringRule: (rawInput: string) => void;
+  deleteRecurringRule: (id: string) => void;
+  fulfillRecurringRule: (id: string) => void;
 
   updateCrisisContact: (id: string, c: Partial<CrisisContact>) => void;
   addCrisisContact: () => void;
@@ -153,6 +171,16 @@ function mk(o: Mk): CartItem {
 
 function skip(id: string, name: string, reasoning: string, price: number, imageKeyword?: string): SkippedItem {
   return { id, name, reasoning, price, imageKeyword: imageKeyword || keywordForName(name) };
+}
+
+// Looks up the local catalog for a price/image match on a recurring item's
+// name so manually-added rules (e.g. "Bread") render with real data when
+// possible, falling back to a generic estimate for unknown items.
+function catalogMatch(itemName: string) {
+  const lower = itemName.toLowerCase();
+  return (productCatalog as any[]).find(
+    (p) => p.name.toLowerCase().includes(lower) || p.keywords?.some((k: string) => lower.includes(k) || k.includes(lower))
+  );
 }
 
 // ---------- mock cart generation ----------
@@ -407,6 +435,8 @@ export const useStore = create<AppState>((set, get) => ({
     { id: "cc1", name: "Priya Sharma", relation: "Sister", phone: "+91 98XXX XX234" },
   ],
 
+  recurringRules: [],
+
   productDetailFor: null,
   addressSelectorOpen: false,
   addAddressOpen: false,
@@ -417,25 +447,19 @@ export const useStore = create<AppState>((set, get) => ({
   generateResults: async (input) => {
     set({ isGenerating: true, searchQuery: input });
     try {
-      const { dietaryPreferences, familyMembers, favoriteBrands } = get();
-      
+      const { dietaryPreferences } = get();
+
       const { generateCartFn } = await import("@/lib/api/agent.functions");
-      
+
       const res = await generateCartFn({
         data: {
           query: input,
-          userContext: {
-            dietary: dietaryPreferences,
-            family: familyMembers,
-            patterns: favoriteBrands.map(b => b.name).join(", ")
-          }
+          dietary: dietaryPreferences,
         }
       });
-      
-      let items = res.items || [];
-      // Apply UI level override just in case, though the AI is instructed to handle it
-      if (dietaryPreferences.includes("Vegetarian")) items = items.filter((i: any) => i.is_vegetarian);
-      
+
+      const items = res.items || [];
+
       set({
         cartItems: items.map((i: any) => ({ ...i, price: Number(i.price), originalPrice: i.original_price ? Number(i.original_price) : undefined, imageKeyword: i.image_keyword, isVegetarian: i.is_vegetarian, isEco: i.is_eco, etaMinutes: i.eta_minutes })),
         skippedItems: (res.skipped || []).map((i: any) => ({ ...i, price: Number(i.price), imageKeyword: i.image_keyword })),
@@ -524,6 +548,45 @@ export const useStore = create<AppState>((set, get) => ({
 
   updateFamilyMember: (id, m) =>
     set((s) => ({ familyMembers: s.familyMembers.map((x) => (x.id === id ? { ...x, ...m } : x)) })),
+
+  addRecurringRule: (rawInput) => {
+    const trimmed = rawInput.trim();
+    if (!trimmed) return;
+    const parsed = parseRecurringInput(trimmed);
+    const match = catalogMatch(parsed.itemName);
+    set((s) => ({
+      recurringRules: [
+        ...s.recurringRules,
+        {
+          id: `rr_${Date.now()}`,
+          itemName: parsed.itemName,
+          frequencyLabel: parsed.frequencyLabel,
+          frequencyDays: parsed.frequencyDays,
+          rawInput: trimmed,
+          nextDueDate: addDays(new Date(), parsed.frequencyDays),
+          price: match?.price ?? 150,
+          imageKeyword: match?.image_keyword ?? keywordForName(parsed.itemName),
+        },
+      ],
+    }));
+  },
+  deleteRecurringRule: (id) => set((s) => ({ recurringRules: s.recurringRules.filter((r) => r.id !== id) })),
+  fulfillRecurringRule: (id) => {
+    const rule = get().recurringRules.find((r) => r.id === id);
+    if (!rule) return;
+    get().addCartItem({
+      id: `${rule.id}_${Date.now()}`,
+      name: rule.itemName,
+      price: rule.price,
+      imageKeyword: rule.imageKeyword,
+      category: "Recurring",
+      reasoning: `Recurring reminder — ${rule.frequencyLabel.toLowerCase()}.`,
+      agentSource: "context",
+    });
+    set((s) => ({
+      recurringRules: s.recurringRules.map((r) => (r.id === id ? { ...r, nextDueDate: addDays(new Date(), r.frequencyDays) } : r)),
+    }));
+  },
 
   updateCrisisContact: (id, c) =>
     set((s) => ({ crisisContacts: s.crisisContacts.map((x) => (x.id === id ? { ...x, ...c } : x)) })),

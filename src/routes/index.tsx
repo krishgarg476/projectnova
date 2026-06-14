@@ -4,6 +4,8 @@ import { Layout } from "@/components/Layout";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { ProductImage } from "@/components/ProductImage";
 import { useStore } from "@/store";
+import { PredictivePulse } from "@/components/PredictivePulse";
+import { ZeroSecondCart } from "@/components/ZeroSecondCart";
 import { ChevronLeft, ChevronRight, Sparkles, Camera, Mic, Users, Leaf, AlertTriangle, Activity } from "lucide-react";
 
 import { getHomeProductsFn } from "@/lib/api/home.functions";
@@ -41,6 +43,8 @@ function Home() {
 
   return (
     <Layout>
+      <ZeroSecondCart />
+      <PredictivePulse />
       <div className="bg-[#eaeded]">
         <div className="relative h-[380px] overflow-hidden">
           {SLIDES.map((s, i) => (

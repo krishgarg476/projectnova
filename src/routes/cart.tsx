@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { ProductImage } from "@/components/ProductImage";
 import { useStore, cartTotal } from "@/store";
 import { bundlesFor, keywordForName } from "@/lib/catalog";
+import { getGreenPathSuggestions, estimateCO2SavedKg } from "@/lib/greenPath";
 import { Sparkles, Leaf, ChevronDown, ChevronUp, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/cart")({
@@ -12,10 +13,11 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  const { cartItems, skippedItems, updateQuantity, removeItem, addSkippedItem, addCartItem, addresses, selectedAddressId } = useStore();
+  const { cartItems, skippedItems, recurringRules, updateQuantity, removeItem, addSkippedItem, addCartItem, addresses, selectedAddressId } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [showSkipped, setShowSkipped] = useState(false);
-  const [ecoBoost, setEcoBoost] = useState(0);
+  const [greenAdded, setGreenAdded] = useState(false);
+  const [greenSavings, setGreenSavings] = useState(0);
   const navigate = useNavigate();
   const total = cartTotal(cartItems);
   const address = addresses.find((a) => a.id === selectedAddressId);
@@ -32,10 +34,26 @@ function CartPage() {
     return out.slice(0, 4);
   }, [cartItems]);
 
-  function addEcoSuggestions() {
-    addCartItem({ id: "eco1", name: "Reusable Cloth Napkins (4-pack)", category: "Eco", price: 220, reasoning: "Bundled with this delivery", imageKeyword: "cloth-napkins", isEco: true });
-    addCartItem({ id: "eco2", name: "Bamboo Toothbrush (2-pack)", category: "Eco", price: 180, reasoning: "Bundled with this delivery", imageKeyword: "bamboo-toothbrush", isEco: true });
-    setEcoBoost(100);
+  const greenSuggestions = useMemo(
+    () => getGreenPathSuggestions(cartItems, recurringRules),
+    [cartItems, recurringRules]
+  );
+  const co2Saved = estimateCO2SavedKg(greenSuggestions.length);
+
+  function addGreenSuggestions() {
+    for (const item of greenSuggestions) {
+      addCartItem({
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        price: item.price,
+        imageKeyword: item.imageKeyword,
+        reasoning: "Added via Green Path — consolidates your delivery",
+        agentSource: "context",
+      });
+    }
+    setGreenSavings(co2Saved);
+    setGreenAdded(true);
   }
 
   return (
@@ -120,16 +138,31 @@ function CartPage() {
             </div>
           )}
 
-          <div className="mt-5 p-4 rounded-md border border-[#007600]/40 bg-[#e8f5e9]">
-            <div className="flex items-center gap-2 font-semibold text-[14px] text-[#0a5d20]"><Leaf className="w-4 h-4" /> Green Path</div>
-            <p className="text-[13px] mt-1">Add 2 more items to consolidate this delivery and save ~0.4 kg CO₂.</p>
-            <div className="h-2 bg-white/70 rounded mt-2 overflow-hidden">
-              <div className="h-full bg-[#007600] transition-all duration-500" style={{ width: `${ecoBoost || 35}%` }} />
+          {cartItems.length > 0 && (greenSuggestions.length > 0 || greenAdded) && (
+            <div className="mt-5 p-4 rounded-md border border-[#007600]/40 bg-[#e8f5e9]">
+              <div className="flex items-center gap-2 font-semibold text-[14px] text-[#0a5d20]"><Leaf className="w-4 h-4" /> Green Path</div>
+              {!greenAdded ? (
+                <>
+                  <p className="text-[13px] mt-1">
+                    Adding {greenSuggestions.length === 1 ? "1 more item" : `${greenSuggestions.length} more items`} from your usual list —{" "}
+                    <span className="font-semibold">{greenSuggestions.map((s) => s.name).join(", ")}</span> — would let this be delivered in the
+                    same trip, saving ~{co2Saved} kg CO₂.
+                  </p>
+                  <div className="h-2 bg-white/70 rounded mt-2 overflow-hidden">
+                    <div className="h-full bg-[#007600] transition-all duration-500" style={{ width: "35%" }} />
+                  </div>
+                  <button onClick={addGreenSuggestions} className="btn-az-yellow mt-3">Add suggested items</button>
+                </>
+              ) : (
+                <>
+                  <div className="h-2 bg-white/70 rounded mt-2 overflow-hidden">
+                    <div className="h-full bg-[#007600] transition-all duration-500" style={{ width: "100%" }} />
+                  </div>
+                  <div className="text-[13px] text-[#0a5d20] mt-2 font-semibold">✓ Delivery consolidated — ~{greenSavings} kg CO₂ saved</div>
+                </>
+              )}
             </div>
-            {ecoBoost === 0
-              ? <button onClick={addEcoSuggestions} className="btn-az-yellow mt-3">Add suggested items</button>
-              : <div className="text-[13px] text-[#0a5d20] mt-2 font-semibold">✓ Eco bundle added — 0.4 kg CO₂ saved</div>}
-          </div>
+          )}
         </section>
 
         <aside className="lg:sticky lg:top-4 h-fit space-y-3">

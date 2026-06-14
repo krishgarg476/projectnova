@@ -57,7 +57,7 @@ async function test() {
       }
     });
 
-    console.log("Curated Data:", JSON.parse(curatorResponse.text() || "{}"));
+    console.log("Curated Data:", JSON.parse(curatorResponse.text || "{}"));
   } catch (err) {
     console.error("Test failed:", err);
   }

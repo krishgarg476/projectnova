@@ -1,44 +1,60 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
-import { Camera, Sparkles } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Camera, Sparkles, Loader2 } from "lucide-react";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@/store";
 import { ProductCard } from "@/components/ProductCard";
+import { processImageFn } from "@/lib/api/vision.functions";
 
 export const Route = createFileRoute("/fridge-whisperer")({
   head: () => ({ meta: [{ title: "Fridge Whisperer — Now" }] }),
   component: FridgePage,
 });
 
-const NOTICED = [
-  { k: "milk-carton", t: "Milk carton looks nearly empty", add: true },
-  { k: "leafy-greens", t: "No fresh vegetables visible", add: true },
-  { k: "eggs", t: "Egg tray down to 2 — restocking", add: true },
-  { k: "bread-loaf", t: "Bread — looks fine, skipping", add: false },
-  { k: "butter", t: "Butter half-empty", add: true },
-];
-
-const RESULTS = [
-  { id: "f1", name: "Amul Toned Milk 1L (2-pack)", imageKeyword: "milk-carton", price: 128, reasoning: "Carton in photo is nearly empty" },
-  { id: "f2", name: "Fresh Spinach 250g", imageKeyword: "spinach-bunch", price: 45, reasoning: "Veg crisper appears empty" },
-  { id: "f3", name: "Farm Eggs (12-pack)", imageKeyword: "farm-eggs", price: 96, reasoning: "Only 2 eggs visible" },
-  { id: "f4", name: "Amul Butter 500g", imageKeyword: "amul-butter", price: 285, reasoning: "Butter pack half-empty" },
-];
-
 function FridgePage() {
   const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
+  const [noticed, setNoticed] = useState<{ t: string; add: boolean }[]>([]);
+  const [results, setResults] = useState<any[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
+
   const addCart = useStore((s) => s.addCartItem);
 
-  function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files?.[0]) return;
-    setScanned(true);
-    NOTICED.forEach((_, i) => setTimeout(() => setStep(i + 1), 1800 + i * 400));
+  async function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const base64Image = event.target?.result as string;
+      setPreview(base64Image);
+      setScanned(true);
+      setLoading(true);
+      setStep(0);
+      setNoticed([]);
+      setResults([]);
+
+      try {
+        const data = await processImageFn({ data: { base64Image } });
+        setNoticed(data.noticed);
+        setResults(data.results);
+        
+        data.noticed.forEach((_, i) => setTimeout(() => setStep(i + 1), 800 + i * 400));
+      } catch (err) {
+        console.error("Vision failed", err);
+        setNoticed([{ t: "Failed to scan image. Please try again.", add: false }]);
+        setStep(1);
+      } finally {
+        setLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   function addAll() {
-    RESULTS.forEach((r) => addCart({ id: r.id, name: r.name, category: "Fridge", price: r.price, reasoning: r.reasoning, imageKeyword: r.imageKeyword }));
+    results.forEach((r) => addCart({ id: r.id, name: r.name, category: "Fridge", price: r.price, reasoning: r.reasoning, imageKeyword: r.imageKeyword }));
   }
 
   return (
@@ -57,10 +73,13 @@ function FridgePage() {
                 <input type="file" accept="image/*" onChange={onUpload} className="hidden" />
               </label>
             ) : (
-              <div className="relative aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-[#cce0ff] to-[#aac8f5] flex items-center justify-center text-9xl">
-                🧊
-                {step < NOTICED.length && (
-                  <div className="absolute inset-x-0 h-1 bg-[#5848bc] shadow-[0_0_20px_#5848bc]" style={{ top: `${(step / NOTICED.length) * 100}%`, transition: "top 0.4s" }} />
+              <div className="relative aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-[#cce0ff] to-[#aac8f5] flex items-center justify-center">
+                {preview && <img src={preview} alt="Uploaded" className="absolute inset-0 w-full h-full object-cover opacity-80" />}
+                <div className="absolute inset-0 bg-black/10"></div>
+                {loading && <Loader2 className="w-16 h-16 text-white animate-spin absolute" />}
+                
+                {step < noticed.length && !loading && (
+                  <div className="absolute inset-x-0 h-1 bg-[#5848bc] shadow-[0_0_20px_#5848bc]" style={{ top: `${(step / Math.max(1, noticed.length)) * 100}%`, transition: "top 0.4s" }} />
                 )}
               </div>
             )}
@@ -68,23 +87,26 @@ function FridgePage() {
 
           <div className="az-card p-5">
             <div className="font-bold text-[16px] mb-3 flex items-center gap-2"><Sparkles className="w-4 h-4 text-[#5848bc]" /> Now noticed:</div>
-            <ul className="space-y-2">
-              {NOTICED.map((n, i) => (
-                <li key={i} className={`flex items-center gap-3 p-2 rounded transition-all duration-500 ${i < step ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}>
-                  <span className="text-2xl">{["🥛", "🥬", "🥚", "🍞", "🧈"][i]}</span>
-                  <span className="text-[13px] flex-1">{n.t}</span>
-                  {n.add ? <span className="ai-badge">Adding</span> : <span className="text-[11px] text-[#565959]">Skipped</span>}
-                </li>
-              ))}
-            </ul>
+            {loading ? (
+              <div className="text-[13px] text-[#565959] animate-pulse">Scanning image...</div>
+            ) : (
+              <ul className="space-y-2">
+                {noticed.map((n, i) => (
+                  <li key={i} className={`flex items-center gap-3 p-2 rounded transition-all duration-500 ${i < step ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}>
+                    <span className="text-[13px] flex-1">{n.t}</span>
+                    {n.add ? <span className="ai-badge">Adding</span> : <span className="text-[11px] text-[#565959]">Skipped</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
-        {step >= NOTICED.length && (
+        {step >= noticed.length && results.length > 0 && !loading && (
           <div className="mt-6 az-card p-5">
             <h2 className="font-bold text-[18px] mb-3">Suggested cart</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {RESULTS.map((r) => (
+              {results.map((r) => (
                 <ProductCard key={r.id} p={{ id: r.id, name: r.name, imageKeyword: r.imageKeyword, price: r.price, reasoning: r.reasoning }} onAdd={() => addCart({ id: r.id, name: r.name, category: "Fridge", price: r.price, reasoning: r.reasoning, imageKeyword: r.imageKeyword })} />
               ))}
             </div>
