@@ -30,7 +30,7 @@ const CATEGORY_TAXONOMY = [
 // Tiny AI call. The prompt contains ONLY the user's situation string plus
 // a fixed category vocabulary — no product catalog, no purchase history.
 async function extractIntent(query: string): Promise<Intent> {
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",

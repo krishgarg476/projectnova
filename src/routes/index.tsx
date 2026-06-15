@@ -50,12 +50,12 @@ function Home() {
       <div className="bg-[#eaeded]">
         <div className="relative h-[380px] overflow-hidden">
           {SLIDES.map((s, i) => (
-            <div key={i} className="absolute inset-0 transition-opacity duration-700" style={{ background: s.bg, opacity: i === slide ? 1 : 0 }}>
+            <div key={i} className="absolute inset-0 transition-opacity duration-700" style={{ background: s.bg, opacity: i === slide ? 1 : 0, pointerEvents: i === slide ? "auto" : "none" }}>
               <div className="max-w-[1500px] mx-auto h-full px-12 flex items-center justify-between gap-12">
                 <div className="max-w-xl">
                   <h1 className="text-[44px] leading-tight font-extrabold text-[#0f1111]">{s.headline}</h1>
                   <p className="mt-3 text-[18px] text-[#0f1111]/80">{s.sub}</p>
-                  <button onClick={() => quickRun("daily restock")} className="mt-6 btn-az-orange px-6 py-3 text-[15px] font-semibold">{s.cta} →</button>
+                  <button onClick={() => s.action ? quickRun("daily restock") : navigate({ to: s.route })} className="mt-6 btn-az-orange px-6 py-3 text-[15px] font-semibold">{s.cta} →</button>
                 </div>
                 <div className="grid grid-cols-4 gap-3">
                   {s.keywords.map((k, idx) => (
