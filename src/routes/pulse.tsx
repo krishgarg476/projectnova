@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { useStore } from "@/store";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
@@ -28,12 +29,22 @@ const TIMELINE = [
 
 function PulsePage() {
   const navigate = useNavigate();
+  const session = useStore((s) => s.session);
+  const authReady = useStore((s) => s.authReady);
   const generate = useStore((s) => s.generateResults);
 
   async function prep(q: string) {
     await generate(q);
     navigate({ to: "/results" });
   }
+
+  useEffect(() => {
+    if (authReady && !session) {
+      navigate({ to: "/auth", replace: true });
+    }
+  }, [authReady, session, navigate]);
+
+  if (!authReady || !session) return null;
 
   return (
     <Layout>

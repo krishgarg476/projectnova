@@ -84,6 +84,7 @@ function ChatPage() {
           history,
           dietary: dietaryPreferences,
           familyContext,
+          brandPreferences: useStore.getState().favoriteBrands.reduce((acc: any, b) => { acc[b.name] = b.orderCount; return acc; }, {}),
         },
       });
 

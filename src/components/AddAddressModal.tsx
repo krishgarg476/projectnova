@@ -7,7 +7,7 @@ export function AddAddressModal() {
   const open = useStore((s) => s.addAddressOpen);
   const close = useStore((s) => s.closeAddAddress);
   const editId = useStore((s) => s.editAddressId);
-  const addresses = useStore((s) => s.addresses);
+  const addresses = useStore((s) => s.addresses) || [];
   const add = useStore((s) => s.addAddress);
   const update = useStore((s) => s.updateAddress);
 
@@ -26,7 +26,7 @@ export function AddAddressModal() {
       setCity(editing?.cityStateZip || "");
       setTouched(false);
     }
-  }, [open, editing]);
+  }, [open, editId]);
 
   function save() {
     setTouched(true);

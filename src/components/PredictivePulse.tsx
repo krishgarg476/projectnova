@@ -11,13 +11,15 @@ export function PredictivePulse() {
   const addCart = useStore((s) => s.addCartItem);
   const navigate = useNavigate();
 
-  // Show the popup 2 seconds after the page loads
+  const session = useStore((s) => s.session);
+
+  // Show the popup 2 seconds after the page loads, only if logged in
   useEffect(() => {
-    if (purchaseHistory.predictedRestocks && purchaseHistory.predictedRestocks.length > 0) {
+    if (session && purchaseHistory.predictedRestocks && purchaseHistory.predictedRestocks.length > 0) {
       const t = setTimeout(() => setIsVisible(true), 2000);
       return () => clearTimeout(t);
     }
-  }, []);
+  }, [session]);
 
   if (!purchaseHistory.predictedRestocks?.length) return null;
 

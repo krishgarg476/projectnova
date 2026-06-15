@@ -39,7 +39,8 @@ export function Header() {
   const cartItems = useStore((s) => s.cartItems);
   const generate = useStore((s) => s.generateResults);
   const userProfile = useStore((s) => s.userProfile);
-  const addresses = useStore((s) => s.addresses);
+  const session = useStore((s) => s.session);
+  const addresses = useStore((s) => s.addresses) || [];
   const selectedAddressId = useStore((s) => s.selectedAddressId);
   const openAddressSelector = useStore((s) => s.openAddressSelector);
   const openCrisisTriage = useStore((s) => s.openCrisisTriage);
@@ -48,8 +49,8 @@ export function Header() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || addresses[0];
-  const pincode = selectedAddress?.cityStateZip.match(/\d{6}/)?.[0] || "324001";
-  const city = selectedAddress?.cityStateZip.split(",")[0] || "Kota";
+  const pincode = selectedAddress?.cityStateZip?.match(/\d{6}/)?.[0] || "";
+  const city = selectedAddress?.cityStateZip?.split(",")[0] || "";
 
   useEffect(() => {
     const current = PLACEHOLDERS[phIdx];
@@ -82,11 +83,11 @@ export function Header() {
             <Logo />
           </Link>
 
-          <button onClick={openAddressSelector} className="hidden md:flex items-start text-left px-2 py-1 hover:outline hover:outline-1 hover:outline-white rounded-sm shrink-0">
+          <button onClick={() => session ? openAddressSelector() : navigate({ to: "/auth" })} className="hidden md:flex items-start text-left px-2 py-1 hover:outline hover:outline-1 hover:outline-white rounded-sm shrink-0">
             <MapPin className="w-4 h-4 mt-3 mr-1 text-[#ccc]" />
             <div className="leading-tight">
-              <div className="text-[12px] text-[#ccc]">Deliver to {userProfile.name.split(" ")[0]}</div>
-              <div className="text-[14px] font-bold">{city} {pincode}</div>
+              <div className="text-[12px] text-[#ccc]">Deliver to {session ? userProfile.name.split(" ")[0] || "User" : "Select"}</div>
+              <div className="text-[14px] font-bold">{session ? (city + " " + pincode) : "Address"}</div>
             </div>
           </button>
 
@@ -105,8 +106,8 @@ export function Header() {
           </button>
 
           <div className="relative shrink-0" onMouseEnter={() => setAcctOpen(true)} onMouseLeave={() => setAcctOpen(false)}>
-            <button className="text-left px-2 py-1 hover:outline hover:outline-1 hover:outline-white rounded-sm leading-tight">
-              <div className="text-[12px]">Hello, {userProfile.name.split(" ")[0]}</div>
+            <button onClick={() => !session && navigate({ to: "/auth" })} className="text-left px-2 py-1 hover:outline hover:outline-1 hover:outline-white rounded-sm leading-tight">
+              <div className="text-[12px]">Hello, {session ? userProfile.name.split(" ")[0] || "User" : "Sign in"}</div>
               <div className="text-[14px] font-bold flex items-center gap-0.5">Account & Lists <ChevronDown className="w-3 h-3" /></div>
             </button>
             <AnimatePresence>
@@ -117,12 +118,20 @@ export function Header() {
                   className="absolute right-0 top-full bg-white text-[#0f1111] shadow-2xl border border-[#d5d9d9] rounded-sm w-64 z-50 p-3"
                 >
                   <div className="text-[13px] font-semibold mb-2">Your Account</div>
-                  <Link to="/profile" className="block py-1 text-[13px] az-link">Your Profile</Link>
-                  <Link to="/tracking/$orderId" params={{ orderId: "demo-order" }} className="block py-1 text-[13px] az-link">Your Orders</Link>
-                  <Link to="/pulse" className="block py-1 text-[13px] az-link">Your Predictive Pulse</Link>
-                  <Link to="/eco-impact" className="block py-1 text-[13px] az-link">Your Eco Impact</Link>
-                  <hr className="my-2" />
-                  <button className="text-[13px] az-link">Sign Out</button>
+                  {session && (
+                    <>
+                      <Link to="/profile" className="block py-1 text-[13px] az-link">Your Profile</Link>
+                      <Link to="/tracking/$orderId" params={{ orderId: "demo-order" }} className="block py-1 text-[13px] az-link">Your Orders</Link>
+                      <Link to="/pulse" className="block py-1 text-[13px] az-link">Your Predictive Pulse</Link>
+                      <Link to="/eco-impact" className="block py-1 text-[13px] az-link">Your Eco Impact</Link>
+                      <hr className="my-2" />
+                    </>
+                  )}
+                  {session ? (
+                    <button onClick={async () => { await import('@/lib/supabase').then(m => m.supabase.auth.signOut()); navigate({ to: "/" }); }} className="text-[13px] az-link">Sign Out</button>
+                  ) : (
+                    <Link to="/auth" className="text-[13px] az-link text-[#ff9900] font-bold">Sign In</Link>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -190,7 +199,7 @@ export function Header() {
               className="bg-white h-full w-[360px] max-w-[90vw] overflow-y-auto" onClick={(e) => e.stopPropagation()}
             >
               <div className="bg-[#232f3e] text-white px-5 py-4 flex items-center justify-between">
-                <div className="font-bold text-lg">Hello, {userProfile.name.split(" ")[0]}</div>
+                <div className="font-bold text-lg">Hello, {session ? userProfile.name.split(" ")[0] || "User" : "Sign In"}</div>
                 <button onClick={() => setMenuOpen(false)}><X className="w-6 h-6" /></button>
               </div>
               <MegaSection title="Now Intelligence" items={[

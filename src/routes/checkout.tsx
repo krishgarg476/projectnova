@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { ProductImage } from "@/components/ProductImage";
 import { useStore, cartTotal } from "@/store";
@@ -11,7 +11,15 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
-  const { cartItems, groupCartItems, checkoutSource, addresses, selectedAddressId, openAddressSelector, placeOrder } = useStore();
+  const session = useStore((s) => s.session);
+  const authReady = useStore((s) => s.authReady);
+  const cartItems = useStore((s) => s.cartItems);
+  const groupCartItems = useStore((s) => s.groupCartItems);
+  const checkoutSource = useStore((s) => s.checkoutSource);
+  const addresses = useStore((s) => s.addresses);
+  const selectedAddressId = useStore((s) => s.selectedAddressId);
+  const openAddressSelector = useStore((s) => s.openAddressSelector);
+  const placeOrder = useStore((s) => s.placeOrder);
   const [speed, setSpeed] = useState("express");
   const [pay, setPay] = useState("upi");
   const [loading, setLoading] = useState(false);
@@ -32,6 +40,14 @@ function CheckoutPage() {
       navigate({ to: "/tracking/$orderId", params: { orderId: id } });
     }, 1000);
   }
+
+  useEffect(() => {
+    if (authReady && !session) {
+      navigate({ to: "/auth", replace: true });
+    }
+  }, [authReady, session, navigate]);
+
+  if (!authReady || !session) return null;
 
   return (
     <Layout>

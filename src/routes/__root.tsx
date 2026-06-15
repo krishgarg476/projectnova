@@ -8,6 +8,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { supabase } from "../lib/supabase";
+import { useStore } from "../store";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -119,6 +121,40 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const setAuth = useStore((s) => s.setAuth);
+  const updateProfile = useStore((s) => s.updateProfile);
+
+  useEffect(() => {
+    // Clean up old persist storage
+    try { localStorage.removeItem("now-app-storage"); } catch {}
+
+    // Check active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuth(session, session?.user ?? null);
+      if (session?.user) {
+        // Fetch profile
+        supabase.from("profiles").select("*").eq("id", session.user.id).single().then(({ data }) => {
+          if (data) {
+             useStore.setState({ 
+                userProfile: { ...useStore.getState().userProfile, name: data.name },
+                familyMembers: data.family_context 
+                  ? data.family_context.split(",").map((m: string, i: number) => ({ id: `c${i}`, name: m.trim(), age: 0 }))
+                  : useStore.getState().familyMembers,
+                dietaryPreferences: Array.isArray(data.dietary_preferences) ? data.dietary_preferences : [],
+                addresses: Array.isArray(data.addresses) ? data.addresses : useStore.getState().addresses,
+                // brand_preferences could be mapped here if we used it in store
+             });
+          }
+        });
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuth(session, session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setAuth]);
 
   return (
     <QueryClientProvider client={queryClient}>

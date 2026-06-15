@@ -5,7 +5,7 @@ import { Check, Plus, MapPin } from "lucide-react";
 export function AddressSelector() {
   const open = useStore((s) => s.addressSelectorOpen);
   const close = useStore((s) => s.closeAddressSelector);
-  const addresses = useStore((s) => s.addresses);
+  const addresses = useStore((s) => s.addresses) || [];
   const selectedId = useStore((s) => s.selectedAddressId);
   const setSelected = useStore((s) => s.setSelectedAddress);
   const openAdd = useStore((s) => s.openAddAddress);

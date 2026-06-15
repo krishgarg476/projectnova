@@ -7,6 +7,8 @@ import { purchaseHistory } from "@/lib/data/purchaseHistory";
 const inputSchema = z.object({
   query: z.string(),
   dietary: z.array(z.string()).optional(),
+  familyContext: z.string().optional(),
+  brandPreferences: z.record(z.number()).optional(),
 });
 
 interface Intent {
@@ -28,13 +30,14 @@ const CATEGORY_TAXONOMY = [
 
 // --- STAGE 1: INTENT EXTRACTION ---
 // Tiny AI call. The prompt contains ONLY the user's situation string plus
-// a fixed category vocabulary — no product catalog, no purchase history.
-async function extractIntent(query: string): Promise<Intent> {
+// a fixed category vocabulary — no product catalog.
+async function extractIntent(query: string, familyContext: string): Promise<Intent> {
   const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
   const response = await ai.models.generateContent({
     model: "gemini-3.5-flash",
     contents: `Situation (Indian household): "${query}"
+Family Context: ${familyContext || "Unknown"}
 Pick 1-3 categories ONLY from this list: ${CATEGORY_TAXONOMY.join(", ")}.
 Give 3-6 specific everyday Indian grocery/household item keywords (e.g. chips, namkeen, milk, noodles, paracetamol) relevant to the situation. No alcohol. Also give urgency (low/medium/high) and estimated_items (3-8).`,
     config: {
@@ -64,7 +67,7 @@ Give 3-6 specific everyday Indian grocery/household item keywords (e.g. chips, n
 // --- STAGE 2: PRODUCT RESOLUTION (no AI) ---
 // Pure backend logic: matches the local catalog against Stage 1's
 // categories/keywords, then re-ranks using purchase history.
-function resolveCart(intent: Intent, dietary: string[]) {
+function resolveCart(intent: Intent, dietary: string[], brandPreferences: Record<string, number> = {}) {
   const categories = intent.categories.map((c) => c.toLowerCase());
   const keywords = intent.keywords.map((k) => k.toLowerCase());
 
@@ -93,7 +96,8 @@ function resolveCart(intent: Intent, dietary: string[]) {
 
     // Brand-history boost is a tiebreaker only — capped well below a
     // category/keyword match so it can't drag in irrelevant items.
-    const brandBoost = Math.min(1, (purchaseHistory.brandCounts[product.brand] || 0) / 4);
+    const userBrands = Object.keys(brandPreferences).length ? brandPreferences : purchaseHistory.brandCounts;
+    const brandBoost = Math.min(1, (userBrands[product.brand] || 0) / 4);
 
     return { product, matchScore, total: matchScore + brandBoost };
   });
@@ -117,8 +121,9 @@ function resolveCart(intent: Intent, dietary: string[]) {
       ? Math.round((1 - product.price / product.original_price) * 100)
       : 0;
 
+    const userBrands = Object.keys(brandPreferences).length ? brandPreferences : purchaseHistory.brandCounts;
     const isHealthCategory = ["Pharmacy", "Wellness", "Emergency"].includes(product.category);
-    const fromHistory = (purchaseHistory.brandCounts[product.brand] || 0) > 0;
+    const fromHistory = (userBrands[product.brand] || 0) > 0;
     const agentSource = isHealthCategory ? "health" : fromHistory ? "context" : "speed";
 
     const reasoning = fromHistory
@@ -181,6 +186,6 @@ function resolveCart(intent: Intent, dietary: string[]) {
 export const generateCartFn = createServerFn({ method: "POST" })
   .inputValidator((data) => inputSchema.parse(data))
   .handler(async ({ data }) => {
-    const intent = await extractIntent(data.query);
-    return resolveCart(intent, data.dietary || []);
+    const intent = await extractIntent(data.query, data.familyContext || "");
+    return resolveCart(intent, data.dietary || [], data.brandPreferences || {});
   });

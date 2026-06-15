@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { ProductImage } from "@/components/ProductImage";
@@ -28,7 +28,30 @@ const ORDERS = [
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { userProfile, updateProfile, addresses, openAddAddress, deleteAddress, setSelectedAddress, selectedAddressId, dietaryPreferences, toggleDietary, familyMembers, updateFamilyMember, favoriteBrands, toggleBrand, crisisContacts, updateCrisisContact, addCrisisContact, deleteCrisisContact, generateResults, recurringRules, addRecurringRule, deleteRecurringRule, fulfillRecurringRule } = useStore();
+  const session = useStore((s) => s.session);
+  const authReady = useStore((s) => s.authReady);
+  const userProfile = useStore((s) => s.userProfile);
+  const updateProfile = useStore((s) => s.updateProfile);
+  const addresses = useStore((s) => s.addresses) || [];
+  const openAddAddress = useStore((s) => s.openAddAddress);
+  const deleteAddress = useStore((s) => s.deleteAddress);
+  const setSelectedAddress = useStore((s) => s.setSelectedAddress);
+  const selectedAddressId = useStore((s) => s.selectedAddressId);
+  const dietaryPreferences = useStore((s) => s.dietaryPreferences);
+  const toggleDietary = useStore((s) => s.toggleDietary);
+  const familyMembers = useStore((s) => s.familyMembers);
+  const updateFamilyMember = useStore((s) => s.updateFamilyMember);
+  const favoriteBrands = useStore((s) => s.favoriteBrands);
+  const toggleBrand = useStore((s) => s.toggleBrand);
+  const crisisContacts = useStore((s) => s.crisisContacts);
+  const updateCrisisContact = useStore((s) => s.updateCrisisContact);
+  const addCrisisContact = useStore((s) => s.addCrisisContact);
+  const deleteCrisisContact = useStore((s) => s.deleteCrisisContact);
+  const generateResults = useStore((s) => s.generateResults);
+  const recurringRules = useStore((s) => s.recurringRules);
+  const addRecurringRule = useStore((s) => s.addRecurringRule);
+  const deleteRecurringRule = useStore((s) => s.deleteRecurringRule);
+  const fulfillRecurringRule = useStore((s) => s.fulfillRecurringRule);
   const [pats, setPats] = useState(PATTERNS);
   const [editing, setEditing] = useState<string | null>(null);
   const [pendingDel, setPendingDel] = useState<string | null>(null);
@@ -45,6 +68,15 @@ function ProfilePage() {
     const f = e.target.files?.[0];
     if (f) updateProfile({ avatarUrl: URL.createObjectURL(f) });
   }
+
+  useEffect(() => {
+    if (authReady && !session) {
+      navigate({ to: "/auth", replace: true });
+    }
+  }, [authReady, session, navigate]);
+
+  if (!authReady) return <Layout><div className="flex items-center justify-center min-h-[60vh] text-[#565959]">Loading...</div></Layout>;
+  if (!session) return null;
 
   return (
     <Layout>

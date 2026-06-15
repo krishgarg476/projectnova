@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { Session, User } from "@supabase/supabase-js";
 import { keywordForName } from "@/lib/catalog";
 import { parseRecurringInput, addDays } from "@/lib/recurring";
 import productCatalog from "@/lib/data/productCatalog.json";
@@ -68,6 +69,11 @@ export interface CrisisContact { id: string; name: string; relation: string; pho
 interface AgentVerdicts { speed: string; context: string; health: string; }
 
 interface AppState {
+  session: Session | null;
+  user: User | null;
+  authReady: boolean;
+  setAuth: (session: Session | null, user: User | null) => void;
+
   searchQuery: string;
   cartItems: CartItem[];
   skippedItems: SkippedItem[];
@@ -380,6 +386,11 @@ export function crisisItemsFor(t: CrisisType, custom = ""): CartItem[] {
 }
 
 export const useStore = create<AppState>((set, get) => ({
+  session: null,
+  user: null,
+  authReady: false,
+  setAuth: (session, user) => set({ session, user, authReady: true }),
+
   searchQuery: "",
   cartItems: [],
   skippedItems: [],
@@ -406,34 +417,19 @@ export const useStore = create<AppState>((set, get) => ({
   lastOrderTotal: 0,
   lastOrderId: "",
 
-  addresses: [
-    { id: "home", label: "Home", fullName: "Krish Sharma", line1: "203, Vigyan Nagar", cityStateZip: "Kota, Rajasthan 324001" },
-    { id: "office", label: "Office", fullName: "Krish Sharma", line1: "5th Floor, Tech Park", cityStateZip: "Jaipur 302017" },
-  ],
-  selectedAddressId: "home",
+  addresses: [],
+  selectedAddressId: "",
 
-  userProfile: { name: "Krish Sharma", phone: "+91 98765 43210", email: "krish@example.com" },
+  userProfile: { name: "", phone: "", email: "" },
 
-  dietaryPreferences: ["Vegetarian", "Budget-conscious"],
+  dietaryPreferences: [],
 
   crisisType: null,
   crisisCustomText: "",
 
-  familyMembers: [
-    { id: "fm1", name: "Krish (You)", age: 21, note: "—" },
-    { id: "fm2", name: "Mother", age: 48, note: "Vegetarian" },
-    { id: "fm3", name: "Father", age: 52, note: "No dietary restrictions" },
-    { id: "fm4", name: "Younger sibling", age: 12, note: "Lactose-sensitive" },
-  ],
-  favoriteBrands: [
-    { name: "Raw Pressery", category: "Juices", orderCount: 6, prioritize: true },
-    { name: "Minimalist", category: "Skincare", orderCount: 3, prioritize: true },
-    { name: "Amul", category: "Dairy", orderCount: 12, prioritize: true },
-    { name: "Tata Sampann", category: "Pulses", orderCount: 4, prioritize: true },
-  ],
-  crisisContacts: [
-    { id: "cc1", name: "Priya Sharma", relation: "Sister", phone: "+91 98XXX XX234" },
-  ],
+  familyMembers: [],
+  favoriteBrands: [],
+  crisisContacts: [],
 
   recurringRules: [],
 
@@ -455,6 +451,8 @@ export const useStore = create<AppState>((set, get) => ({
         data: {
           query: input,
           dietary: dietaryPreferences,
+          familyContext: get().familyMembers.map(x => `${x.name} (${x.age})${x.note ? ` - ${x.note}` : ''}`).join(', '),
+          brandPreferences: get().favoriteBrands.reduce((acc: any, b) => { acc[b.name] = b.orderCount; return acc; }, {}),
         }
       });
 
@@ -525,29 +523,67 @@ export const useStore = create<AppState>((set, get) => ({
   setSelectedAddress: (id) => set({ selectedAddressId: id }),
   addAddress: (a) => {
     const id = `addr_${Date.now()}`;
-    set((s) => ({ addresses: [...s.addresses, { id, ...a }], selectedAddressId: id }));
+    set((s) => {
+      const nextAddresses = [...s.addresses, { id, ...a }];
+      if (s.session?.user) {
+        import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ addresses: nextAddresses }).eq('id', s.session!.user.id));
+      }
+      return { addresses: nextAddresses, selectedAddressId: id };
+    });
     return id;
   },
-  updateAddress: (id, a) => set((s) => ({ addresses: s.addresses.map((x) => (x.id === id ? { id, ...a } : x)) })),
+  updateAddress: (id, a) => set((s) => {
+    const nextAddresses = s.addresses.map((x) => (x.id === id ? { id, ...a } : x));
+    if (s.session?.user) {
+      import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ addresses: nextAddresses }).eq('id', s.session!.user.id));
+    }
+    return { addresses: nextAddresses };
+  }),
   deleteAddress: (id) =>
     set((s) => {
       const left = s.addresses.filter((x) => x.id !== id);
+      if (s.session?.user) {
+        import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ addresses: left }).eq('id', s.session!.user.id));
+      }
       return { addresses: left, selectedAddressId: s.selectedAddressId === id ? (left[0]?.id || "") : s.selectedAddressId };
     }),
 
-  updateProfile: (p) => set((s) => ({ userProfile: { ...s.userProfile, ...p } })),
+  updateProfile: (p) => set((s) => {
+    if (p.name && s.session?.user) {
+      import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ name: p.name }).eq('id', s.session!.user.id));
+    }
+    return { userProfile: { ...s.userProfile, ...p } };
+  }),
 
   toggleDietary: (tag) =>
-    set((s) => ({
-      dietaryPreferences: s.dietaryPreferences.includes(tag)
+    set((s) => {
+      const next = s.dietaryPreferences.includes(tag)
         ? s.dietaryPreferences.filter((t) => t !== tag)
-        : [...s.dietaryPreferences, tag],
-    })),
+        : [...s.dietaryPreferences, tag];
+      if (s.session?.user) {
+        import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ dietary_preferences: next }).eq('id', s.session!.user.id));
+      }
+      return { dietaryPreferences: next };
+    }),
   toggleBrand: (name) =>
-    set((s) => ({ favoriteBrands: s.favoriteBrands.map((b) => (b.name === name ? { ...b, prioritize: !b.prioritize } : b)) })),
+    set((s) => {
+      const nextBrands = s.favoriteBrands.map((b) => (b.name === name ? { ...b, prioritize: !b.prioritize } : b));
+      if (s.session?.user) {
+        const brandObj = nextBrands.reduce((acc, b) => ({ ...acc, [b.name]: b.orderCount }), {});
+        import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ brand_preferences: brandObj }).eq('id', s.session!.user.id));
+      }
+      return { favoriteBrands: nextBrands };
+    }),
 
   updateFamilyMember: (id, m) =>
-    set((s) => ({ familyMembers: s.familyMembers.map((x) => (x.id === id ? { ...x, ...m } : x)) })),
+    set((s) => {
+      const nextMembers = s.familyMembers.map((x) => (x.id === id ? { ...x, ...m } : x));
+      if (s.session?.user) {
+        const familyStr = nextMembers.map(x => `${x.name} (${x.age})${x.note ? ` - ${x.note}` : ''}`).join(', ');
+        import('@/lib/supabase').then(m => m.supabase.from('profiles').update({ family_context: familyStr }).eq('id', s.session!.user.id));
+      }
+      return { familyMembers: nextMembers };
+    }),
 
   addRecurringRule: (rawInput) => {
     const trimmed = rawInput.trim();

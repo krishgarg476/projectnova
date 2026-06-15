@@ -12,15 +12,8 @@ const chatInputSchema = z.object({
   })).optional(),
   dietary: z.array(z.string()).optional(),
   familyContext: z.string().optional(),
+  brandPreferences: z.record(z.number()).optional(),
 });
-
-// User profile context for personalized suggestions
-const USER_CONTEXT = `
-User: Krish Sharma, 21, Kota Rajasthan
-Family: Mother (48, Vegetarian), Father (52), Younger sibling (12, Lactose-sensitive)
-Family of 4, Vegetarian household
-Favorite brands: ${Object.entries(purchaseHistory.brandCounts).map(([b, c]) => `${b} (${c} orders)`).join(", ")}
-`;
 
 const CATEGORY_TAXONOMY = [
   "Emergency", "Beverages", "Electronics", "Dairy", "Bakery", "Pantry",
@@ -175,7 +168,9 @@ function fallbackExtract(message: string): ChatAIResponse {
 async function chatWithAI(
   message: string,
   history: { role: string; text: string }[],
-  familyContext: string
+  familyContext: string,
+  dietary: string[],
+  brandPreferences: Record<string, number>
 ): Promise<ChatAIResponse> {
   const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
@@ -184,11 +179,16 @@ async function chatWithAI(
     .map((h) => `${h.role === "user" ? "Customer" : "Assistant"}: ${h.text}`)
     .join("\n");
 
+  const dietaryStr = dietary && dietary.length > 0 ? `Dietary Preferences: ${dietary.join(", ")}` : "";
+  const brands = Object.keys(brandPreferences).length ? brandPreferences : purchaseHistory.brandCounts;
+  const brandStr = Object.entries(brands).map(([b, c]) => `${b} (${c} orders)`).join(", ");
+
   const response = await ai.models.generateContent({
     model: "gemini-3.5-flash",
     contents: `You are "Now AI", a smart shopping assistant for Amazon Now (instant delivery in India).
-${USER_CONTEXT}
-${familyContext ? `Additional context: ${familyContext}` : ""}
+${familyContext ? `Family Context: ${familyContext}` : ""}
+${dietaryStr}
+Favorite brands: ${brandStr}
 
 Recent conversation:
 ${conversationHistory}
@@ -232,7 +232,8 @@ Respond naturally like a helpful WhatsApp shopping assistant. Be warm, brief (1-
 function resolveProducts(
   categories: string[],
   keywords: string[],
-  dietary: string[]
+  dietary: string[],
+  brandPreferences: Record<string, number>
 ) {
   const cats = categories.map((c) => c.toLowerCase());
   const kws = keywords.map((k) => k.toLowerCase());
@@ -258,7 +259,8 @@ function resolveProducts(
       matchScore += CATEGORY_RANK_WEIGHT[categoryRank] ?? 1;
     }
 
-    const brandBoost = Math.min(1, (purchaseHistory.brandCounts[product.brand] || 0) / 4);
+    const userBrands = Object.keys(brandPreferences).length ? brandPreferences : purchaseHistory.brandCounts;
+    const brandBoost = Math.min(1, (userBrands[product.brand] || 0) / 4);
     return { product, matchScore, total: matchScore + brandBoost };
   });
 
@@ -293,7 +295,9 @@ export const chatMessageFn = createServerFn({ method: "POST" })
       aiResponse = await chatWithAI(
         data.message,
         data.history || [],
-        data.familyContext || ""
+        data.familyContext || "",
+        data.dietary || [],
+        data.brandPreferences || {}
       );
     } catch (error: any) {
       // Fallback to local keyword matching when AI is unavailable (rate limit, network, etc.)
@@ -307,7 +311,8 @@ export const chatMessageFn = createServerFn({ method: "POST" })
       products = resolveProducts(
         aiResponse.categories,
         aiResponse.keywords,
-        data.dietary || []
+        data.dietary || [],
+        data.brandPreferences || {}
       );
     }
 
