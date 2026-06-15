@@ -5,8 +5,8 @@ import { ProductCard, type Product } from "@/components/ProductCard";
 import { ProductImage } from "@/components/ProductImage";
 import { useStore } from "@/store";
 import { PredictivePulse } from "@/components/PredictivePulse";
-import { ZeroSecondCart } from "@/components/ZeroSecondCart";
-import { ChevronLeft, ChevronRight, Sparkles, Camera, Mic, Users, Leaf, AlertTriangle, Activity } from "lucide-react";
+
+import { ChevronLeft, ChevronRight, Sparkles, Camera, Mic, Users, Leaf, AlertTriangle, Activity, Zap } from "lucide-react";
 
 import { getHomeProductsFn } from "@/lib/api/home.functions";
 
@@ -24,9 +24,9 @@ export const Route = createFileRoute("/")({
 });
 
 const SLIDES = [
-  { headline: "Tell Now what's going on.", sub: "AI-powered urgent shopping — describe your situation, get your cart instantly.", cta: "Try it now", action: true, keywords: ["lunch-box", "soda-can", "popcorn", "medicine", "tissue", "milk-carton", "bread-loaf", "battery"], bg: "linear-gradient(135deg, #e8e4ff 0%, #c8b8ff 100%)" },
-  { headline: "Your next 24 hours, predicted.", sub: "Predictive Pulse learns your patterns — so the cart is ready before you need it.", cta: "See your Pulse", action: true, keywords: ["coffee-cup", "fried-eggs", "salad", "pasta", "cookies", "tea", "tacos", "pizza"], bg: "linear-gradient(135deg, #d4f0e8 0%, #8ed5be 100%)" },
-  { headline: "Snap your fridge. Get your cart.", sub: "Fridge Whisperer uses vision AI to spot what's missing — and restocks it.", cta: "Try Fridge Whisperer", route: "/fridge-whisperer", keywords: ["lettuce", "carrot", "eggs", "cheese-block", "meat", "apple", "milk-bottle", "butter"], bg: "linear-gradient(135deg, #ffe5cc 0%, #ffb380 100%)" },
+  { headline: "Tell Now what's going on.", sub: "AI-powered urgent shopping — describe your situation, get your cart instantly.", cta: "Try it now", keywords: ["lunch-box", "soda-can", "popcorn", "medicine", "tissue", "milk-carton", "bread-loaf", "battery"], bg: "linear-gradient(135deg, #e8e4ff 0%, #c8b8ff 100%)" },
+  { headline: "Your next 24 hours, predicted.", sub: "Zero-Second Reorder learns your patterns — so the cart is ready before you need it.", cta: "See your predictions", keywords: ["coffee-cup", "fried-eggs", "salad", "pasta", "cookies", "tea", "tacos", "pizza"], bg: "linear-gradient(135deg, #d4f0e8 0%, #8ed5be 100%)" },
+  { headline: "Snap your fridge. Get your cart.", sub: "Fridge Whisperer uses vision AI to spot what's missing — and restocks it.", cta: "Try Fridge Whisperer", keywords: ["lettuce", "carrot", "eggs", "cheese-block", "meat", "apple", "milk-bottle", "butter"], bg: "linear-gradient(135deg, #ffe5cc 0%, #ffb380 100%)" },
 ];
 
 function Home() {
@@ -36,14 +36,16 @@ function Home() {
   const generate = useStore((s) => s.generateResults);
   const addCart = useStore((s) => s.addCartItem);
   const openCrisis = useStore((s) => s.openCrisisTriage);
+  const generateRecipe = useStore((s) => s.generateRecipeCart);
 
   useEffect(() => { const t = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), 5500); return () => clearInterval(t); }, []);
 
   async function quickRun(q: string) { await generate(q); navigate({ to: "/results" }); }
+  async function runRecipe(meal: string, people: number) { await generateRecipe(meal, people); navigate({ to: "/results" }); }
 
   return (
     <Layout>
-      <ZeroSecondCart />
+
       <PredictivePulse />
       <div className="bg-[#eaeded]">
         <div className="relative h-[380px] overflow-hidden">
@@ -123,6 +125,58 @@ function Home() {
             </Tile>
           </FourColRow>
 
+          <div className="az-card p-6 my-4 relative overflow-hidden bg-gradient-to-br from-[#fff7ed] to-[#ffedd5]">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+              <div className="flex-1">
+                <h2 className="text-[24px] font-bold text-[#b45309] flex items-center gap-2">
+                  <Sparkles className="w-6 h-6" /> Cook something?
+                </h2>
+                <p className="text-[15px] text-[#78350f] mt-1 mb-4">
+                  Tell us what you want to make and for how many people. We'll build a perfectly scaled recipe cart in seconds.
+                </p>
+                <div className="flex items-center gap-3 max-w-xl">
+                  <input
+                    type="text"
+                    placeholder="e.g. Chole bhature for Sunday lunch"
+                    className="flex-1 px-4 py-3 rounded outline-none border border-[#fdba74] focus:ring-2 focus:ring-[#f97316] bg-white text-[15px]"
+                    id="recipe-input"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const meal = (document.getElementById('recipe-input') as HTMLInputElement).value || 'Chole bhature';
+                        const people = parseInt((document.getElementById('recipe-people') as HTMLInputElement).value || '4', 10);
+                        runRecipe(meal, people);
+                      }
+                    }}
+                  />
+                  <div className="flex items-center gap-2 bg-white border border-[#fdba74] rounded px-3 py-3">
+                    <Users className="w-5 h-5 text-[#f97316]" />
+                    <input type="number" defaultValue={4} min={1} max={20} className="w-12 outline-none text-[15px]" id="recipe-people" />
+                  </div>
+                  <button 
+                    onClick={() => {
+                      const meal = (document.getElementById('recipe-input') as HTMLInputElement).value || 'Chole bhature';
+                      const people = parseInt((document.getElementById('recipe-people') as HTMLInputElement).value || '4', 10);
+                      runRecipe(meal, people);
+                    }}
+                    className="bg-[#f97316] hover:bg-[#ea580c] text-white px-6 py-3 rounded font-semibold whitespace-nowrap transition-colors"
+                  >
+                    Build Cart →
+                  </button>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {["Biryani", "Dal Makhani", "Pav Bhaji", "Paneer Butter Masala"].map(r => (
+                    <button key={r} onClick={() => runRecipe(r, 4)} className="bg-white/60 hover:bg-white text-[#9a3412] px-3 py-1.5 rounded-full text-[13px] font-medium transition-colors border border-[#fed7aa]">
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="hidden lg:block w-[300px] h-[150px] relative">
+                 <ProductImage keyword="indian-spices" seed="recipe-art" size={300} className="w-full h-full object-cover rounded-lg shadow-sm opacity-90 mix-blend-multiply" />
+              </div>
+            </div>
+          </div>
+
           <div className="az-card overflow-hidden">
             <div className="bg-gradient-to-r from-[#dde9f5] to-[#f3e5ff] p-6 flex items-center justify-between gap-6">
               <div>
@@ -193,7 +247,7 @@ function Home() {
 
           <section className="az-card p-5 mb-8">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[21px] font-bold flex items-center gap-2"><Activity className="w-5 h-5 text-[#5848bc]" /> Your Predictive Pulse</h2>
+              <h2 className="text-[21px] font-bold flex items-center gap-2"><Zap className="w-5 h-5 text-[#b12704]" /> Zero-Second Reorder</h2>
               <Link to="/pulse" className="az-link text-[13px]">View full timeline →</Link>
             </div>
             <p className="text-[14px] text-[#565959] flex items-center gap-2">

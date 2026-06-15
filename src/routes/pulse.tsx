@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/pulse")({
-  head: () => ({ meta: [{ title: "Predictive Pulse — Now" }] }),
+  head: () => ({ meta: [{ title: "Zero-Second Reorder — Now" }] }),
   component: PulsePage,
 });
 
@@ -39,7 +39,7 @@ function PulsePage() {
     <Layout>
       <div className="max-w-[1500px] mx-auto px-4 py-5 space-y-4">
         <div className="az-card p-5">
-          <h1 className="text-[22px] font-bold">Predictive Pulse</h1>
+          <h1 className="text-[22px] font-bold">Zero-Second Reorder</h1>
           <p className="text-[14px] text-[#565959]">Now learns your patterns and prepares carts before you need them.</p>
         </div>
 

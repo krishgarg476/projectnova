@@ -96,7 +96,7 @@ export function ProductCard({
             {[1, 2, 3, 4].map((i) => <Star key={i} className="w-3 h-3 fill-current" />)}
             <Star className="w-3 h-3 fill-current opacity-50" />
           </div>
-          <span className="text-[#007185]">({Math.floor(120 + parseInt(p.id.replace(/\D/g, "") || "1") * 37)})</span>
+          <span className="text-[#007185]">({Math.floor(120 + parseInt(p.id.replace(/\D/g, "").slice(-5) || "1", 10) * 37 % 5000)})</span>
         </div>
       )}
 

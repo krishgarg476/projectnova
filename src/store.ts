@@ -75,6 +75,9 @@ interface AppState {
   urgencyLevel: Urgency;
   isGenerating: boolean;
 
+  recipeMeta: { meal: string; people: number; cookTime: string; difficulty: string } | null;
+  fridgeInventory: string[];
+
   groupCartItems: GroupItem[];
   groupPeople: { name: string; color: string; initials: string }[];
   checkoutSource: CheckoutSource;
@@ -105,11 +108,13 @@ interface AppState {
 
   setSearchQuery: (t: string) => void;
   generateResults: (input: string) => Promise<void>;
+  generateRecipeCart: (meal: string, people: number) => Promise<void>;
   updateQuantity: (id: string, qty: number) => void;
   removeItem: (id: string) => void;
   addCartItem: (item: Partial<CartItem> & { id: string; name: string; price: number }) => void;
   addSkippedItem: (id: string) => void;
   clearCart: () => void;
+  loadSharedCart: (b64Payload: string) => void;
 
   setGroupItems: (fn: (items: GroupItem[]) => GroupItem[]) => void;
   setGroupItemStatus: (id: string, status: GroupItem["status"]) => void;
@@ -387,6 +392,9 @@ export const useStore = create<AppState>((set, get) => ({
   urgencyLevel: "normal",
   isGenerating: false,
 
+  recipeMeta: null,
+  fridgeInventory: ["Salt", "Turmeric Powder", "Cooking Oil", "Onion"],
+
   groupCartItems: [
     { id: "gi1", name: "Pizza Family Pack", imageKeyword: "pizza-family-pack", price: 599, by: 1, status: "confirmed" },
     { id: "gi2", name: "Coke 2L (3-pack)", imageKeyword: "coca-cola-bottles", price: 270, by: 0, status: "confirmed" },
@@ -479,6 +487,45 @@ export const useStore = create<AppState>((set, get) => ({
       });
     }
   },
+  generateRecipeCart: async (meal, people) => {
+    set({ isGenerating: true, searchQuery: `Cooking: ${meal} for ${people}` });
+    try {
+      const { dietaryPreferences, fridgeInventory, favoriteBrands } = get();
+
+      const { generateRecipeCartFn } = await import("@/lib/api/recipe.functions");
+
+      const res = await generateRecipeCartFn({
+        data: {
+          meal,
+          people,
+          dietary: dietaryPreferences,
+          fridgeInventory,
+          favoriteBrands,
+        }
+      });
+
+      const items = res.items || [];
+
+      set({
+        cartItems: items.map((i: any) => ({ ...i, price: Number(i.price), originalPrice: i.original_price ? Number(i.original_price) : undefined, imageKeyword: i.image_keyword, isVegetarian: i.is_vegetarian, isEco: i.is_eco, etaMinutes: i.eta_minutes })),
+        skippedItems: (res.skipped || []).map((i: any) => ({ ...i, price: Number(i.price), imageKeyword: i.image_keyword })),
+        agentVerdicts: res.verdicts,
+        urgencyLevel: res.urgency as Urgency,
+        recipeMeta: { meal, people, cookTime: res.recipeMeta.cookTime, difficulty: res.recipeMeta.difficulty },
+        isGenerating: false,
+      });
+    } catch (error: any) {
+      console.error("Recipe Generation failed:", error);
+      set({ 
+        isGenerating: false,
+        agentVerdicts: { 
+          speed: "ERROR", 
+          context: String(error.message || error), 
+          health: "Check browser console or terminal" 
+        }
+      });
+    }
+  },
   updateQuantity: (id, qty) =>
     set((s) => ({
       cartItems: s.cartItems.map((it) => (it.id === id ? { ...it, quantity: Math.max(0, qty) } : it)).filter((it) => it.quantity > 0),
@@ -501,7 +548,33 @@ export const useStore = create<AppState>((set, get) => ({
       skippedItems: s.skippedItems.filter((x) => x.id !== id),
     });
   },
-  clearCart: () => set({ cartItems: [], skippedItems: [] }),
+  clearCart: () => set({ cartItems: [], skippedItems: [], recipeMeta: null }),
+  loadSharedCart: (b64Payload) => {
+    try {
+      const decoded = atob(b64Payload);
+      const parsed = JSON.parse(decoded) as any[]; // [[id, name, price, qty, img], ...]
+      const items = parsed.map(c => mk({
+        id: c[0] || ("sc_" + Date.now()),
+        name: c[1] || "Shared Item",
+        price: Number(c[2]) || 0,
+        quantity: Number(c[3]) || 1,
+        imageKeyword: c[4] || "product",
+        category: "Shared Cart",
+        reasoning: "Loaded from shared link",
+        agentSource: "context"
+      }));
+      set({ 
+        cartItems: items, 
+        skippedItems: [], 
+        agentVerdicts: { speed: "Instant load", context: "Shared via WhatsApp", health: "User specified list" },
+        urgencyLevel: "normal",
+        recipeMeta: null,
+        searchQuery: "Shared Cart"
+      });
+    } catch (e) {
+      console.error("Failed to load shared cart", e);
+    }
+  },
 
   setGroupItems: (fn) => set((s) => ({ groupCartItems: fn(s.groupCartItems) })),
   setGroupItemStatus: (id, status) => set((s) => ({ groupCartItems: s.groupCartItems.map((i) => (i.id === id ? { ...i, status } : i)) })),

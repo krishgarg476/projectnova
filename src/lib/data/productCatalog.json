@@ -31,5 +31,11 @@
 
   { "id": "h1", "name": "Insulated Lunch Box Set", "category": "Household", "price": 449, "original_price": 699, "image_keyword": "lunch-box-tiffin", "is_vegetarian": true, "is_eco": true, "brand": "Milton", "eta_minutes": 10, "keywords": ["lunch box", "tiffin", "school"] },
   { "id": "h2", "name": "Dettol Handwash 750ml (2-pack)", "category": "Household", "price": 199, "original_price": 280, "image_keyword": "handwash-bottle", "is_vegetarian": true, "is_eco": false, "brand": "Dettol", "eta_minutes": 10, "keywords": ["handwash", "soap", "hygiene", "sanitizer", "germs"] },
-  { "id": "h3", "name": "Colgate MaxFresh 150g (3-pack)", "category": "Household", "price": 198, "original_price": 270, "image_keyword": "toothpaste", "is_vegetarian": true, "is_eco": false, "brand": "Colgate", "eta_minutes": 10, "keywords": ["toothpaste", "oral care", "hygiene"] }
+  { "id": "h3", "name": "Colgate MaxFresh 150g (3-pack)", "category": "Household", "price": 198, "original_price": 270, "image_keyword": "toothpaste", "is_vegetarian": true, "is_eco": false, "brand": "Colgate", "eta_minutes": 10, "keywords": ["toothpaste", "oral care", "hygiene"] },
+
+  { "id": "g1", "name": "Aashirvaad Whole Wheat Atta 5kg", "category": "Staples", "price": 240, "original_price": 260, "image_keyword": "wheat-flour-bag", "is_vegetarian": true, "is_eco": false, "brand": "Aashirvaad", "eta_minutes": 15, "keywords": ["atta", "flour", "wheat", "roti", "bhature", "chapati"] },
+  { "id": "g2", "name": "Tata Sampann Kabuli Chana 1kg", "category": "Staples", "price": 180, "original_price": 220, "image_keyword": "chickpeas", "is_vegetarian": true, "is_eco": false, "brand": "Tata Sampann", "eta_minutes": 12, "keywords": ["chana", "chickpeas", "chole", "kabuli"] },
+  { "id": "g3", "name": "Amul Fresh Malai Paneer 200g", "category": "Dairy", "price": 85, "original_price": 95, "image_keyword": "paneer-block", "is_vegetarian": true, "is_eco": false, "brand": "Amul", "eta_minutes": 10, "keywords": ["paneer", "cottage cheese", "dairy"] },
+  { "id": "g4", "name": "Amul Pure Ghee 1L", "category": "Dairy", "price": 550, "original_price": 600, "image_keyword": "ghee-jar", "is_vegetarian": true, "is_eco": false, "brand": "Amul", "eta_minutes": 15, "keywords": ["ghee", "butter", "cooking fat"] },
+  { "id": "g5", "name": "Everest Chole Masala 100g", "category": "Pantry", "price": 65, "original_price": 75, "image_keyword": "spice-box", "is_vegetarian": true, "is_eco": false, "brand": "Everest", "eta_minutes": 10, "keywords": ["masala", "spices", "chole", "seasoning"] }
 ]

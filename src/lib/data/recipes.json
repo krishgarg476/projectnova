@@ -1,0 +1,327 @@
+[
+  {
+    "name": "Chole Bhature",
+    "basePeople": 4,
+    "cookTime": "45 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Kabuli Chana", "qty": 500, "unit": "g" },
+      { "name": "Whole Wheat Atta", "qty": 500, "unit": "g" },
+      { "name": "Chole Masala", "qty": 50, "unit": "g" },
+      { "name": "Onion", "qty": 300, "unit": "g" },
+      { "name": "Tomato", "qty": 400, "unit": "g" },
+      { "name": "Cooking Oil", "qty": 200, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Chicken Biryani",
+    "basePeople": 4,
+    "cookTime": "1 hr 15 mins",
+    "difficulty": "Hard",
+    "ingredients": [
+      { "name": "Basmati Rice", "qty": 500, "unit": "g" },
+      { "name": "Chicken", "qty": 1000, "unit": "g" },
+      { "name": "Biryani Masala", "qty": 50, "unit": "g" },
+      { "name": "Onion", "qty": 500, "unit": "g" },
+      { "name": "Curd", "qty": 200, "unit": "g" },
+      { "name": "Ghee", "qty": 100, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Dal Makhani",
+    "basePeople": 4,
+    "cookTime": "1 hr 30 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Whole Urad Dal", "qty": 250, "unit": "g" },
+      { "name": "Rajma", "qty": 50, "unit": "g" },
+      { "name": "Tomato Puree", "qty": 300, "unit": "g" },
+      { "name": "Fresh Cream", "qty": 100, "unit": "ml" },
+      { "name": "Butter", "qty": 100, "unit": "g" },
+      { "name": "Garam Masala", "qty": 20, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Pav Bhaji",
+    "basePeople": 4,
+    "cookTime": "40 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Pav Bread", "qty": 8, "unit": "pcs" },
+      { "name": "Potato", "qty": 400, "unit": "g" },
+      { "name": "Cauliflower", "qty": 200, "unit": "g" },
+      { "name": "Green Peas", "qty": 100, "unit": "g" },
+      { "name": "Pav Bhaji Masala", "qty": 50, "unit": "g" },
+      { "name": "Butter", "qty": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Paneer Butter Masala",
+    "basePeople": 4,
+    "cookTime": "35 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Paneer", "qty": 400, "unit": "g" },
+      { "name": "Tomato", "qty": 500, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Cashews", "qty": 50, "unit": "g" },
+      { "name": "Butter", "qty": 50, "unit": "g" },
+      { "name": "Fresh Cream", "qty": 50, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Khichdi",
+    "basePeople": 4,
+    "cookTime": "25 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Rice", "qty": 200, "unit": "g" },
+      { "name": "Moong Dal", "qty": 200, "unit": "g" },
+      { "name": "Ghee", "qty": 50, "unit": "ml" },
+      { "name": "Cumin Seeds", "qty": 10, "unit": "g" },
+      { "name": "Turmeric Powder", "qty": 10, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sambar",
+    "basePeople": 4,
+    "cookTime": "40 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Toor Dal", "qty": 200, "unit": "g" },
+      { "name": "Mixed Vegetables", "qty": 300, "unit": "g" },
+      { "name": "Sambar Powder", "qty": 50, "unit": "g" },
+      { "name": "Tamarind Paste", "qty": 20, "unit": "g" },
+      { "name": "Mustard Seeds", "qty": 10, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Masala Dosa",
+    "basePeople": 4,
+    "cookTime": "45 mins",
+    "difficulty": "Hard",
+    "ingredients": [
+      { "name": "Dosa Batter", "qty": 1000, "unit": "g" },
+      { "name": "Potato", "qty": 400, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Mustard Seeds", "qty": 10, "unit": "g" },
+      { "name": "Cooking Oil", "qty": 100, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Palak Paneer",
+    "basePeople": 4,
+    "cookTime": "30 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Spinach", "qty": 500, "unit": "g" },
+      { "name": "Paneer", "qty": 400, "unit": "g" },
+      { "name": "Tomato", "qty": 200, "unit": "g" },
+      { "name": "Garlic", "qty": 20, "unit": "g" },
+      { "name": "Fresh Cream", "qty": 50, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Aloo Gobi",
+    "basePeople": 4,
+    "cookTime": "30 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Potato", "qty": 300, "unit": "g" },
+      { "name": "Cauliflower", "qty": 400, "unit": "g" },
+      { "name": "Tomato", "qty": 150, "unit": "g" },
+      { "name": "Turmeric Powder", "qty": 10, "unit": "g" },
+      { "name": "Cooking Oil", "qty": 50, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Rajma Chawal",
+    "basePeople": 4,
+    "cookTime": "50 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Rajma", "qty": 300, "unit": "g" },
+      { "name": "Basmati Rice", "qty": 400, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Tomato", "qty": 300, "unit": "g" },
+      { "name": "Rajma Masala", "qty": 40, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Mutton Rogan Josh",
+    "basePeople": 4,
+    "cookTime": "1 hr 30 mins",
+    "difficulty": "Hard",
+    "ingredients": [
+      { "name": "Mutton", "qty": 1000, "unit": "g" },
+      { "name": "Onion", "qty": 400, "unit": "g" },
+      { "name": "Curd", "qty": 200, "unit": "g" },
+      { "name": "Kashmiri Red Chilli", "qty": 30, "unit": "g" },
+      { "name": "Mustard Oil", "qty": 100, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Butter Chicken",
+    "basePeople": 4,
+    "cookTime": "1 hr",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Chicken", "qty": 800, "unit": "g" },
+      { "name": "Tomato Puree", "qty": 400, "unit": "g" },
+      { "name": "Butter", "qty": 100, "unit": "g" },
+      { "name": "Fresh Cream", "qty": 100, "unit": "ml" },
+      { "name": "Kasuri Methi", "qty": 10, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Matar Paneer",
+    "basePeople": 4,
+    "cookTime": "35 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Paneer", "qty": 300, "unit": "g" },
+      { "name": "Green Peas", "qty": 200, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Tomato", "qty": 300, "unit": "g" },
+      { "name": "Garam Masala", "qty": 20, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Poha",
+    "basePeople": 4,
+    "cookTime": "20 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Flattened Rice (Poha)", "qty": 300, "unit": "g" },
+      { "name": "Onion", "qty": 150, "unit": "g" },
+      { "name": "Peanuts", "qty": 50, "unit": "g" },
+      { "name": "Green Chilli", "qty": 20, "unit": "g" },
+      { "name": "Mustard Seeds", "qty": 10, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Upma",
+    "basePeople": 4,
+    "cookTime": "20 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Semolina (Rava)", "qty": 300, "unit": "g" },
+      { "name": "Onion", "qty": 150, "unit": "g" },
+      { "name": "Mixed Vegetables", "qty": 100, "unit": "g" },
+      { "name": "Mustard Seeds", "qty": 10, "unit": "g" },
+      { "name": "Ghee", "qty": 50, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Idli",
+    "basePeople": 4,
+    "cookTime": "30 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Idli Batter", "qty": 1000, "unit": "g" },
+      { "name": "Cooking Oil", "qty": 20, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Vada",
+    "basePeople": 4,
+    "cookTime": "45 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Vada Batter", "qty": 800, "unit": "g" },
+      { "name": "Cooking Oil", "qty": 500, "unit": "ml" },
+      { "name": "Green Chilli", "qty": 20, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Bhindi Masala",
+    "basePeople": 4,
+    "cookTime": "25 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Okra (Bhindi)", "qty": 500, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Tomato", "qty": 150, "unit": "g" },
+      { "name": "Coriander Powder", "qty": 20, "unit": "g" },
+      { "name": "Cooking Oil", "qty": 50, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Malai Kofta",
+    "basePeople": 4,
+    "cookTime": "50 mins",
+    "difficulty": "Hard",
+    "ingredients": [
+      { "name": "Paneer", "qty": 200, "unit": "g" },
+      { "name": "Potato", "qty": 200, "unit": "g" },
+      { "name": "Cashews", "qty": 50, "unit": "g" },
+      { "name": "Fresh Cream", "qty": 100, "unit": "ml" },
+      { "name": "Tomato Puree", "qty": 300, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Fish Curry",
+    "basePeople": 4,
+    "cookTime": "45 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Fish", "qty": 800, "unit": "g" },
+      { "name": "Onion", "qty": 300, "unit": "g" },
+      { "name": "Tomato", "qty": 200, "unit": "g" },
+      { "name": "Coconut Milk", "qty": 200, "unit": "ml" },
+      { "name": "Fish Masala", "qty": 40, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Chicken Tikka Masala",
+    "basePeople": 4,
+    "cookTime": "1 hr",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Chicken", "qty": 800, "unit": "g" },
+      { "name": "Curd", "qty": 150, "unit": "g" },
+      { "name": "Tomato Puree", "qty": 400, "unit": "g" },
+      { "name": "Fresh Cream", "qty": 50, "unit": "ml" },
+      { "name": "Tikka Masala", "qty": 50, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Baingan Bharta",
+    "basePeople": 4,
+    "cookTime": "40 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Eggplant (Baingan)", "qty": 500, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Tomato", "qty": 200, "unit": "g" },
+      { "name": "Garlic", "qty": 20, "unit": "g" },
+      { "name": "Mustard Oil", "qty": 50, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Pani Puri",
+    "basePeople": 4,
+    "cookTime": "30 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      { "name": "Puri Packet", "qty": 1, "unit": "pack" },
+      { "name": "Potato", "qty": 300, "unit": "g" },
+      { "name": "Pani Puri Masala", "qty": 50, "unit": "g" },
+      { "name": "Mint Leaves", "qty": 50, "unit": "g" },
+      { "name": "Tamarind Paste", "qty": 50, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Kadhai Paneer",
+    "basePeople": 4,
+    "cookTime": "35 mins",
+    "difficulty": "Medium",
+    "ingredients": [
+      { "name": "Paneer", "qty": 400, "unit": "g" },
+      { "name": "Capsicum", "qty": 200, "unit": "g" },
+      { "name": "Onion", "qty": 200, "unit": "g" },
+      { "name": "Tomato", "qty": 300, "unit": "g" },
+      { "name": "Kadhai Masala", "qty": 40, "unit": "g" }
+    ]
+  }
+]

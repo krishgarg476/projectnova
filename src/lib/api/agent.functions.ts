@@ -33,7 +33,7 @@ async function extractIntent(query: string): Promise<Intent> {
   const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.5-flash",
+    model: "gemini-2.5-flash",
     contents: `Situation (Indian household): "${query}"
 Pick 1-3 categories ONLY from this list: ${CATEGORY_TAXONOMY.join(", ")}.
 Give 3-6 specific everyday Indian grocery/household item keywords (e.g. chips, namkeen, milk, noodles, paracetamol) relevant to the situation. No alcohol. Also give urgency (low/medium/high) and estimated_items (3-8).`,
