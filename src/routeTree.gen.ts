@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WhatsappRouteImport } from './routes/whatsapp'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as SharedRouteImport } from './routes/shared'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as PulseRouteImport } from './routes/pulse'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -24,9 +26,19 @@ import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
 import { Route as GroupDemoRouteImport } from './routes/group.demo'
 import { Route as GroupCartIdRouteImport } from './routes/group.$cartId'
 
+const WhatsappRoute = WhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SharedRoute = SharedRouteImport.update({
+  id: '/shared',
+  path: '/shared',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResultsRoute = ResultsRouteImport.update({
@@ -106,7 +118,9 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/pulse': typeof PulseRoute
   '/results': typeof ResultsRoute
+  '/shared': typeof SharedRoute
   '/voice': typeof VoiceRoute
+  '/whatsapp': typeof WhatsappRoute
   '/group/$cartId': typeof GroupCartIdRoute
   '/group/demo': typeof GroupDemoRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -122,7 +136,9 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/pulse': typeof PulseRoute
   '/results': typeof ResultsRoute
+  '/shared': typeof SharedRoute
   '/voice': typeof VoiceRoute
+  '/whatsapp': typeof WhatsappRoute
   '/group/$cartId': typeof GroupCartIdRoute
   '/group/demo': typeof GroupDemoRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -139,7 +155,9 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/pulse': typeof PulseRoute
   '/results': typeof ResultsRoute
+  '/shared': typeof SharedRoute
   '/voice': typeof VoiceRoute
+  '/whatsapp': typeof WhatsappRoute
   '/group/$cartId': typeof GroupCartIdRoute
   '/group/demo': typeof GroupDemoRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -157,7 +175,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/pulse'
     | '/results'
+    | '/shared'
     | '/voice'
+    | '/whatsapp'
     | '/group/$cartId'
     | '/group/demo'
     | '/tracking/$orderId'
@@ -173,7 +193,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/pulse'
     | '/results'
+    | '/shared'
     | '/voice'
+    | '/whatsapp'
     | '/group/$cartId'
     | '/group/demo'
     | '/tracking/$orderId'
@@ -189,7 +211,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/pulse'
     | '/results'
+    | '/shared'
     | '/voice'
+    | '/whatsapp'
     | '/group/$cartId'
     | '/group/demo'
     | '/tracking/$orderId'
@@ -206,7 +230,9 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   PulseRoute: typeof PulseRoute
   ResultsRoute: typeof ResultsRoute
+  SharedRoute: typeof SharedRoute
   VoiceRoute: typeof VoiceRoute
+  WhatsappRoute: typeof WhatsappRoute
   GroupCartIdRoute: typeof GroupCartIdRoute
   GroupDemoRoute: typeof GroupDemoRoute
   TrackingOrderIdRoute: typeof TrackingOrderIdRoute
@@ -214,11 +240,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/whatsapp': {
+      id: '/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/whatsapp'
+      preLoaderRoute: typeof WhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/voice': {
       id: '/voice'
       path: '/voice'
       fullPath: '/voice'
       preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shared': {
+      id: '/shared'
+      path: '/shared'
+      fullPath: '/shared'
+      preLoaderRoute: typeof SharedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/results': {
@@ -326,7 +366,9 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   PulseRoute: PulseRoute,
   ResultsRoute: ResultsRoute,
+  SharedRoute: SharedRoute,
   VoiceRoute: VoiceRoute,
+  WhatsappRoute: WhatsappRoute,
   GroupCartIdRoute: GroupCartIdRoute,
   GroupDemoRoute: GroupDemoRoute,
   TrackingOrderIdRoute: TrackingOrderIdRoute,

@@ -31,7 +31,7 @@ const SORTS: { key: SortKey; label: string }[] = [
 ];
 
 function ResultsPage() {
-  const { searchQuery, agentVerdicts, cartItems, skippedItems, urgencyLevel, addSkippedItem, generateResults, addCartItem, isGenerating } = useStore();
+  const { searchQuery, agentVerdicts, cartItems, skippedItems, urgencyLevel, recipeMeta, addSkippedItem, generateResults, addCartItem, isGenerating } = useStore();
   const [step, setStep] = useState(0);
   const [filters, setFilters] = useState<Record<FilterKey, boolean>>({ veg: false, budget: false, fast: false, eco: false });
   const [sort, setSort] = useState<SortKey>("ai");
@@ -119,6 +119,27 @@ function ResultsPage() {
         </aside>
 
         <section className="space-y-4 min-w-0">
+          {recipeMeta && !isGenerating && (
+            <div className="az-card p-5 bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] border border-[#fdba74]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-[20px] font-bold text-[#9a3412] capitalize">{recipeMeta.meal}</h2>
+                  <p className="text-[14px] text-[#78350f]">Ingredients scaled exactly for {recipeMeta.people} people</p>
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  <span className="text-[13px] font-semibold text-[#b45309] bg-[#ffedd5] px-3 py-1 rounded-full border border-[#fdba74]">⏱ {recipeMeta.cookTime}</span>
+                  <span className={`text-[12px] font-semibold px-3 py-1 rounded-full border ${
+                    recipeMeta.difficulty === 'Easy' ? 'bg-[#dcfce7] text-[#166534] border-[#86efac]' : 
+                    recipeMeta.difficulty === 'Medium' ? 'bg-[#fef08a] text-[#854d0e] border-[#fde047]' : 
+                    'bg-[#fee2e2] text-[#991b1b] border-[#fca5a5]'
+                  }`}>
+                    {recipeMeta.difficulty}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <LayoutGroup>
             <div className="flex gap-2 overflow-x-auto pb-2 relative">
               {SORTS.map((s) => {

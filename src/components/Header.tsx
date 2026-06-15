@@ -17,7 +17,7 @@ const CATEGORIES = ["All", "Groceries", "Wellness", "Household Essentials", "Sna
 
 const NAV_LINKS: { label: string; to: string }[] = [
   { label: "AI Council", to: "/results" },
-  { label: "Predictive Pulse", to: "/pulse" },
+  { label: "Zero-Second Reorder", to: "/pulse" },
   { label: "Fridge Whisperer", to: "/fridge-whisperer" },
   { label: "Crisis Mode", to: "/crisis" },
   { label: "Group Carts", to: "/group/demo" },
@@ -119,7 +119,7 @@ export function Header() {
                   <div className="text-[13px] font-semibold mb-2">Your Account</div>
                   <Link to="/profile" className="block py-1 text-[13px] az-link">Your Profile</Link>
                   <Link to="/tracking/$orderId" params={{ orderId: "demo-order" }} className="block py-1 text-[13px] az-link">Your Orders</Link>
-                  <Link to="/pulse" className="block py-1 text-[13px] az-link">Your Predictive Pulse</Link>
+                  <Link to="/pulse" className="block py-1 text-[13px] az-link">Zero-Second Reorder</Link>
                   <Link to="/eco-impact" className="block py-1 text-[13px] az-link">Your Eco Impact</Link>
                   <hr className="my-2" />
                   <button className="text-[13px] az-link">Sign Out</button>
@@ -195,7 +195,7 @@ export function Header() {
               </div>
               <MegaSection title="Now Intelligence" items={[
                 { label: "AI Council", to: "/results" },
-                { label: "Predictive Pulse", to: "/pulse" },
+                { label: "Zero-Second Reorder", to: "/pulse" },
                 { label: "Fridge Whisperer", to: "/fridge-whisperer" },
                 { label: "Voice Mode", to: "/voice" },
                 { label: "Chat Shopping", to: "/chat" },

@@ -32,7 +32,7 @@ export const processImageFn = createServerFn({ method: "POST" })
       : data.base64Image;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: [
         "You are an AI fridge/pantry scanner. Look at the image and identify 3-5 basic grocery or household items that appear to be missing, running low, or logically should be restocked. Provide what you noticed and broad categories.",
         {
